@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://cnnwqtw5v0xlv"]
+
+[ext_resource type="Script" uid="uid://c12a48fod1go6" path="res://UI/Debug UI/debug_ui.gd" id="1_lcwav"]
+
+[node name="Debug UI" type="Control" unique_id=1393435431]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 830.0
+offset_right = -1327.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_lcwav")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1242009086]
+custom_minimum_size = Vector2(400, 200)
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 25.0
+offset_top = -100.0
+offset_right = 545.0
+offset_bottom = 100.0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1769092101]
+custom_minimum_size = Vector2(500, 150)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=1023223526]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1395470459]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=1043978261]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Horizontal Speed:"
+
+[node name="HorizontalSpeed" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2" unique_id=612793772]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=378922765]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=809712156]
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 20
+text = "Velocity:"
+
+[node name="Velocity" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer" unique_id=1057311063]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 20
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=451705944]
+layout_mode = 2
+size_flags_horizontal = 0
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=1315906351]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Position:"
+
+[node name="Position" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer3" unique_id=172461053]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="HBoxContainer4" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1711615384]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=1128238558]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Optimal Rotation for Strafing:"
+
+[node name="OptimalRotation" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer4" unique_id=680497083]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="HBoxContainer5" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=203575244]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=1100437895]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "FPS:"
+
+[node name="FPS" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/HBoxContainer5" unique_id=395251045]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="PositionSet" type="Label" parent="." unique_id=438465861]
+layout_mode = 0
+offset_left = 25.0
+offset_top = -10.727
+offset_right = 541.0
+offset_bottom = 17.189667
+theme_override_font_sizes/font_size = 20
+text = "Position Set"

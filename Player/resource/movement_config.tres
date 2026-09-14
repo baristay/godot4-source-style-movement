@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="MovementConfig" format=3 uid="uid://6akk0isymaes"]
+
+[ext_resource type="Script" uid="uid://be3gunfttmcmh" path="res://Player/resource/movemet_config.gd" id="1_11g4l"]
+
+[resource]
+script = ExtResource("1_11g4l")
+metadata/_custom_type_script = "uid://be3gunfttmcmh"

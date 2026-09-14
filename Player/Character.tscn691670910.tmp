@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://oea2uyph2jxn"]
+
+[ext_resource type="Script" uid="uid://biqo6youu7kin" path="res://player_handler/player.gd" id="1_oolk3"]
+[ext_resource type="Script" uid="uid://bgnmnelsn44g4" path="res://player_handler/component/collision_component.gd" id="4_1sclt"]
+[ext_resource type="Script" uid="uid://b3xcarxu80w1s" path="res://player_handler/component/input_component.gd" id="4_cgxp2"]
+[ext_resource type="Resource" uid="uid://6akk0isymaes" path="res://player_handler/resource/movement_config.tres" id="4_nv6nb"]
+[ext_resource type="Script" uid="uid://b4hvwrmcqwn8j" path="res://player_handler/state/state_machine.gd" id="5_cgxp2"]
+[ext_resource type="Script" uid="uid://c4wd8bam6wyqx" path="res://player_handler/state/state.gd" id="5_tyf1f"]
+[ext_resource type="Script" uid="uid://cegf1ve7p7d4k" path="res://player_handler/component/snapping_component.gd" id="5_ygtqj"]
+[ext_resource type="Script" uid="uid://cpesd3lo6l1ux" path="res://player_handler/state/air.gd" id="6_nv6nb"]
+[ext_resource type="Script" uid="uid://b4u2pxbm5h6bl" path="res://player_handler/state/ground.gd" id="7_edh1s"]
+[ext_resource type="Curve" uid="uid://c45nu1ndvwhig" path="res://player_handler/Curves/drag_curve.tres" id="9_e422e"]
+[ext_resource type="Curve" uid="uid://bsvn5gwfx5h1g" path="res://player_handler/Curves/accel_curve.tres" id="10_pwp3b"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pwp3b"]
+size = Vector3(0.61, 1.372, 0.61)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_7ig0a"]
+radius = 0.305
+height = 1.372
+
+[node name="Player" type="CharacterBody3D" unique_id=1158190790]
+physics_interpolation_mode = 1
+floor_max_angle = 1.4835298
+script = ExtResource("1_oolk3")
+config = ExtResource("4_nv6nb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2082879573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.686, 0)
+shape = SubResource("BoxShape3D_pwp3b")
+
+[node name="Head" type="Node3D" parent="." unique_id=390591712]
+unique_name_in_owner = true
+physics_interpolation_mode = 2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.201, 0)
+
+[node name="CameraSmooth" type="Node3D" parent="Head" unique_id=637341510]
+unique_name_in_owner = true
+physics_interpolation_mode = 2
+
+[node name="Camera3D" type="Camera3D" parent="Head/CameraSmooth" unique_id=1753414881]
+unique_name_in_owner = true
+physics_interpolation_mode = 2
+cull_mask = 1048573
+current = true
+fov = 74.0
+
+[node name="Model" type="Node3D" parent="." unique_id=1053966831]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.686, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Model" unique_id=457550275]
+layers = 2
+mesh = SubResource("CapsuleMesh_7ig0a")
+
+[node name="Components" type="Node" parent="." unique_id=1818071948]
+
+[node name="InputComponent" type="Node" parent="Components" unique_id=1240773676]
+unique_name_in_owner = true
+script = ExtResource("4_cgxp2")
+config = ExtResource("4_nv6nb")
+metadata/_custom_type_script = "uid://b3xcarxu80w1s"
+
+[node name="CollisionComponent" type="Node" parent="Components" unique_id=1949986814]
+unique_name_in_owner = true
+script = ExtResource("4_1sclt")
+config = ExtResource("4_nv6nb")
+metadata/_custom_type_script = "uid://bgnmnelsn44g4"
+
+[node name="SnappingComponent" type="Node" parent="Components" unique_id=1572820794]
+unique_name_in_owner = true
+script = ExtResource("5_ygtqj")
+config = ExtResource("4_nv6nb")
+metadata/_custom_type_script = "uid://cegf1ve7p7d4k"
+
+[node name="State" type="Node" parent="." unique_id=1515095533]
+unique_name_in_owner = true
+script = ExtResource("5_tyf1f")
+metadata/_custom_type_script = "uid://c4wd8bam6wyqx"
+
+[node name="StateMachine" type="Node" parent="State" unique_id=346846850 node_paths=PackedStringArray("initial_state")]
+unique_name_in_owner = true
+script = ExtResource("5_cgxp2")
+initial_state = NodePath("PlayerGround")
+
+[node name="PlayerAir" type="Node" parent="State/StateMachine" unique_id=1475895563]
+script = ExtResource("6_nv6nb")
+config = ExtResource("4_nv6nb")
+metadata/_custom_type_script = "uid://cpesd3lo6l1ux"
+
+[node name="PlayerGround" type="Node" parent="State/StateMachine" unique_id=920654217]
+script = ExtResource("7_edh1s")
+drag_curve = ExtResource("9_e422e")
+accel_curve = ExtResource("10_pwp3b")
+config = ExtResource("4_nv6nb")
+metadata/_custom_type_script = "uid://b4u2pxbm5h6bl"

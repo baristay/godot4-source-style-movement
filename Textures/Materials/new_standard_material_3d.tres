@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dmnpfag2758j5"]
+
+[ext_resource type="Texture2D" uid="uid://17pvwd3gnxba" path="res://Textures/Dev Textures/PNG/Green/texture_02.png" id="1_blvqs"]
+
+[resource]
+albedo_texture = ExtResource("1_blvqs")
+uv1_scale = Vector3(0.33, 16.485, 1)
+uv1_triplanar_sharpness = 150.0

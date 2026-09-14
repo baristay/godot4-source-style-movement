@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://bbjspavayu0ps"]
+
+[ext_resource type="Script" uid="uid://dfbpdd1xbxjh8" path="res://UI/Side Panel/side_panel.gd" id="1_ia2dr"]
+
+[node name="SidePanel" type="Control" unique_id=2109798762]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1220.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ia2dr")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=383039001]
+custom_maximum_size = Vector2(400, 600)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -400.0
+offset_top = -300.0
+offset_bottom = 300.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=433958327]
+custom_minimum_size = Vector2(300, 700)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Buttons" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=111186376]
+custom_maximum_size = Vector2(300, 649.24)
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 34
+
+[node name="Resume" type="Button" parent="PanelContainer/MarginContainer/Buttons" unique_id=1007363132]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Resume"
+
+[node name="Game Rules" type="Button" parent="PanelContainer/MarginContainer/Buttons" unique_id=1414113024]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Game Rules"
+
+[node name="Options" type="Button" parent="PanelContainer/MarginContainer/Buttons" unique_id=1594842173]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Options"
+
+[node name="Map Select" type="Button" parent="PanelContainer/MarginContainer/Buttons" unique_id=1722998033]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Map Select"
+
+[node name="Quit" type="Button" parent="PanelContainer/MarginContainer/Buttons" unique_id=1731473634]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Quit"

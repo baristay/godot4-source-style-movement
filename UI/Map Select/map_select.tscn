@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://c2x5n44xmawdu"]
+
+[ext_resource type="Script" uid="uid://bwham6lsncxsy" path="res://UI/Map Select/map_select.gd" id="1_krt2c"]
+[ext_resource type="Texture2D" uid="uid://h03qp0yuvw51" path="res://Textures/Map Icons/open_playground_icon.jpeg" id="5_vj06o"]
+[ext_resource type="Texture2D" uid="uid://c775irv14scqe" path="res://Textures/Map Icons/movement_test_icon.jpeg" id="6_4hfg3"]
+
+[node name="MapSelect" type="Control" unique_id=1296421919]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 700.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_krt2c")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1332077952]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -375.0
+offset_top = -250.0
+offset_right = 425.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer" unique_id=796295146]
+custom_minimum_size = Vector2(780, 480)
+custom_maximum_size = Vector2(780, 480)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/ScrollContainer" unique_id=2093091076]
+layout_mode = 2
+theme_override_constants/separation = 76
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer" unique_id=374780826]
+layout_mode = 2
+theme_override_constants/separation = 90
+
+[node name="Open Playground" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=1821616155]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="PanelContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Open Playground" unique_id=1075350412]
+custom_minimum_size = Vector2(200, 170)
+custom_maximum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("5_vj06o")
+ignore_texture_size = true
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Open Playground" unique_id=1418459570]
+custom_maximum_size = Vector2(-1, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 20
+text = "Open Playground"
+
+[node name="Movement Test" type="VBoxContainer" parent="PanelContainer/ScrollContainer/VBoxContainer/HBoxContainer2" unique_id=1639540544]
+layout_mode = 2
+
+[node name="TextureButton" type="TextureButton" parent="PanelContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Movement Test" unique_id=1943819980]
+custom_minimum_size = Vector2(200, 170)
+custom_maximum_size = Vector2(200, 200)
+layout_mode = 2
+texture_normal = ExtResource("6_4hfg3")
+ignore_texture_size = true
+stretch_mode = 6
+
+[node name="Label" type="Label" parent="PanelContainer/ScrollContainer/VBoxContainer/HBoxContainer2/Movement Test" unique_id=185231783]
+custom_maximum_size = Vector2(-1, 30)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 20
+text = "Movement Test"

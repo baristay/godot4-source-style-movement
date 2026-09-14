@@ -1,0 +1,431 @@
+[gd_scene format=3 uid="uid://beh4u57m4xp8s"]
+
+[ext_resource type="PackedScene" uid="uid://oea2uyph2jxn" path="res://Player/Character.tscn" id="1_gr554"]
+[ext_resource type="PackedScene" uid="uid://csg1k32wrj18r" path="res://UI/in_game_ui.tscn" id="2_h3ur4"]
+[ext_resource type="Material" uid="uid://dlq74hicputhy" path="res://Textures/Materials/gray_devtext.tres" id="3_tbs0m"]
+[ext_resource type="Material" uid="uid://b7g71vsvkx5mb" path="res://Textures/Materials/orange_devtext.tres" id="4_fsvip"]
+[ext_resource type="Material" uid="uid://dmnpfag2758j5" path="res://Textures/Materials/new_standard_material_3d.tres" id="5_u4xew"]
+
+[sub_resource type="Curve3D" id="Curve3D_xcjcw"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 49.999878, 0.04450226, 0.001039505, 0, 0, 0, 0, 0, 0, 49.999878, -24.027084, 55.953644),
+"tilts": PackedFloat32Array(0, 0)
+}
+point_count = 2
+
+[sub_resource type="Curve3D" id="Curve3D_v56b3"]
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 0, 0),
+"tilts": PackedFloat32Array(0, 0, 0)
+}
+point_count = 3
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ql8hw"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_xcjcw"]
+sky_material = SubResource("ProceduralSkyMaterial_ql8hw")
+
+[sub_resource type="Environment" id="Environment_v56b3"]
+background_mode = 2
+sky = SubResource("Sky_xcjcw")
+tonemap_mode = 2
+glow_enabled = true
+
+[node name="Node3D" type="Node3D" unique_id=1018862040]
+
+[node name="Player" parent="." unique_id=1158190790 instance=ExtResource("1_gr554")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="InGameUI" parent="." unique_id=2035084139 instance=ExtResource("2_h3ur4")]
+
+[node name="World" type="Node3D" parent="." unique_id=1343753177]
+
+[node name="Plane" type="Node3D" parent="World" unique_id=218710877]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="World/Plane" unique_id=84288032]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Plane/CSGCombiner3D" unique_id=1798327742]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 40, 0)
+cast_shadow = 2
+flip_faces = true
+size = Vector3(100, 80, 100)
+material = ExtResource("3_tbs0m")
+
+[node name="Platforms" type="Node3D" parent="World" unique_id=1391030351]
+
+[node name="CSGCombiner3D2" type="CSGCombiner3D" parent="World/Platforms" unique_id=518070210]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 0)
+calculate_tangents = false
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D2" unique_id=1398064857]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 39)
+size = Vector3(100, 1, 22)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Platforms/CSGCombiner3D2" unique_id=686865329]
+transform = Transform3D(1.51, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 12)
+operation = 2
+radius = 29.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D3" type="CSGCombiner3D" parent="World/Platforms" unique_id=1416532266]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 12, 0)
+calculate_tangents = false
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D3" unique_id=1506118430]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 39)
+size = Vector3(100, 1, 22)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Platforms/CSGCombiner3D3" unique_id=1006955347]
+transform = Transform3D(1.51, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 12)
+operation = 2
+radius = 29.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D4" type="CSGCombiner3D" parent="World/Platforms" unique_id=991141908]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 12, 0)
+calculate_tangents = false
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D4" unique_id=669371259]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 39)
+size = Vector3(100, 1, 22)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Platforms/CSGCombiner3D4" unique_id=1237825054]
+transform = Transform3D(1.51, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 12)
+operation = 2
+radius = 29.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D5" type="CSGCombiner3D" parent="World/Platforms" unique_id=2138223184]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 12, 0)
+calculate_tangents = false
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D5" unique_id=26591343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 39)
+size = Vector3(100, 1, 22)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Platforms/CSGCombiner3D5" unique_id=1264630672]
+transform = Transform3D(1.51, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 12)
+operation = 2
+radius = 29.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D6" type="CSGCombiner3D" parent="World/Platforms" unique_id=1786474861]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26, 0)
+calculate_tangents = false
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D6" unique_id=1856535937]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 39)
+size = Vector3(100, 1, 22)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Platforms/CSGCombiner3D6" unique_id=383359467]
+transform = Transform3D(1.51, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 12)
+operation = 2
+radius = 29.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D6" unique_id=476244053]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.5, 3, 38.5)
+operation = 2
+size = Vector3(5, 1, 13)
+material = ExtResource("4_fsvip")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Platforms/CSGCombiner3D6" unique_id=606701091]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 43, 2.5, 44)
+polygon = PackedVector2Array(-18, -13, 0, 1, 1, 1, 1, -13)
+depth = 5.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D7" type="CSGCombiner3D" parent="World/Platforms" unique_id=1973622545]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 37, 0)
+calculate_tangents = false
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D7" unique_id=741293602]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 39)
+size = Vector3(100, 1, 22)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Platforms/CSGCombiner3D7" unique_id=1780523268]
+transform = Transform3D(1.51, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 12)
+operation = 2
+radius = 29.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D7" unique_id=1480010157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.5, 3, 38.5)
+operation = 2
+size = Vector3(5, 1, 13)
+material = ExtResource("4_fsvip")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Platforms/CSGCombiner3D7" unique_id=86254877]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 43, 2.5, 44)
+polygon = PackedVector2Array(-18, -13, 0, 1, 1, 1, 1, -13)
+depth = 5.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D8" type="CSGCombiner3D" parent="World/Platforms" unique_id=1624962131]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 50, 0)
+calculate_tangents = false
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D8" unique_id=434306107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 39)
+size = Vector3(100, 1, 22)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="World/Platforms/CSGCombiner3D8" unique_id=1859439536]
+transform = Transform3D(1.51, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 12)
+operation = 2
+radius = 29.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Platforms/CSGCombiner3D8" unique_id=1512752880]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.5, 3, 38.5)
+operation = 2
+size = Vector3(5, 1, 13)
+material = ExtResource("4_fsvip")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Platforms/CSGCombiner3D8" unique_id=1984687126]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 43, 2.5, 44)
+polygon = PackedVector2Array(-18, -13, 0, 1, 1, 1, 1, -13)
+depth = 5.0
+material = ExtResource("4_fsvip")
+
+[node name="Ramps" type="Node3D" parent="World" unique_id=1064537743]
+
+[node name="CSGCombiner3D2" type="CSGCombiner3D" parent="World/Ramps" unique_id=322250353]
+use_collision = true
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Ramps/CSGCombiner3D2" unique_id=309590003]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, -0.5, 6)
+polygon = PackedVector2Array(-6, 0, -6, 16, -1, 16, 25, 0)
+depth = 12.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D3" type="CSGCombiner3D" parent="World/Ramps" unique_id=55994909]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+use_collision = true
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Ramps/CSGCombiner3D3" unique_id=911046833]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, -0.5, 6)
+polygon = PackedVector2Array(-6, 0, -6, 16, -1, 16, 25, 0)
+depth = 12.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D4" type="CSGCombiner3D" parent="World/Ramps" unique_id=540716639]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+use_collision = true
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Ramps/CSGCombiner3D4" unique_id=791692069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, -0.5, 6)
+polygon = PackedVector2Array(-6, 0, -6, 16, -1, 16, 25, 0)
+depth = 12.0
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D5" type="CSGCombiner3D" parent="World/Ramps" unique_id=1879192055]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+use_collision = true
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Ramps/CSGCombiner3D5" unique_id=677814213]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35, -0.5, 6)
+polygon = PackedVector2Array(-6, 0, -6, 16, -1, 16, 25, 0)
+depth = 12.0
+material = ExtResource("4_fsvip")
+
+[node name="Surf" type="Node3D" parent="World" unique_id=907110601]
+
+[node name="Path3D" type="Path3D" parent="World/Surf" unique_id=1840066612]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 55.747276, -26.52096)
+curve = SubResource("Curve3D_xcjcw")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Surf/Path3D" unique_id=765890760]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -3, -1.5)
+use_collision = true
+polygon = PackedVector2Array(0, 0, 0, 8, 8, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = ExtResource("5_u4xew")
+
+[node name="Path3D2" type="Path3D" parent="World/Surf" unique_id=600197737]
+curve = SubResource("Curve3D_v56b3")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Surf/Path3D2" unique_id=1545139434]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -0.36801147, 34, -0.36318874)
+use_collision = true
+polygon = PackedVector2Array(-5, -6, 0.5, 1, 0.5, 1, 6, -6)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = ExtResource("5_u4xew")
+
+[node name="Path3D3" type="Path3D" parent="World/Surf" unique_id=172242504]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+curve = SubResource("Curve3D_v56b3")
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Surf/Path3D3" unique_id=962190601]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -0.18123816, 34, -0.19419956)
+use_collision = true
+polygon = PackedVector2Array(-5, -6, 0.5, 1, 0.5, 1, 6, -6)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = true
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
+material = ExtResource("5_u4xew")
+
+[node name="Pillar" type="Node3D" parent="World" unique_id=58061523]
+
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="World/Pillar" unique_id=1281366974]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D" unique_id=1941431792]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -20, 14, -20)
+size = Vector3(3, 28, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D2" type="CSGCombiner3D" parent="World/Pillar" unique_id=1879484682]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D2" unique_id=1153390342]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -20, 14, -20)
+size = Vector3(3, 28, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D3" type="CSGCombiner3D" parent="World/Pillar" unique_id=806799152]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D3" unique_id=1912352541]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -20, 14, -20)
+size = Vector3(3, 28, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D4" type="CSGCombiner3D" parent="World/Pillar" unique_id=855543648]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D4" unique_id=1904098485]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -20, 14, -20)
+size = Vector3(3, 28, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D5" type="CSGCombiner3D" parent="World/Pillar" unique_id=1487332114]
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D5" unique_id=472735820]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -14, 8, -26)
+size = Vector3(3, 16, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D5" unique_id=2079869160]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -26, 10, -26)
+size = Vector3(3, 20, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D5" unique_id=1229396317]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -26, 13, -14)
+size = Vector3(3, 26, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D6" type="CSGCombiner3D" parent="World/Pillar" unique_id=674147507]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D6" unique_id=1501215594]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -14, 8, -26)
+size = Vector3(3, 16, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D6" unique_id=550312071]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -26, 10, -26)
+size = Vector3(3, 20, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D6" unique_id=769380697]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -26, 13, -14)
+size = Vector3(3, 26, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D7" type="CSGCombiner3D" parent="World/Pillar" unique_id=1637034447]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D7" unique_id=68007435]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -14, 8, -26)
+size = Vector3(3, 16, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D7" unique_id=1118760469]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -26, 10, -26)
+size = Vector3(3, 20, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D7" unique_id=144317679]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -26, 13, -14)
+size = Vector3(3, 26, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGCombiner3D8" type="CSGCombiner3D" parent="World/Pillar" unique_id=1573878112]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+use_collision = true
+
+[node name="CSGBox3D" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D8" unique_id=1292739439]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -14, 8, -26)
+size = Vector3(3, 16, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D8" unique_id=595908375]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -26, 10, -26)
+size = Vector3(3, 20, 3)
+material = ExtResource("4_fsvip")
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="World/Pillar/CSGCombiner3D8" unique_id=1606286286]
+transform = Transform3D(0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, 0.70710677, -26, 13, -14)
+size = Vector3(3, 26, 3)
+material = ExtResource("4_fsvip")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="World" unique_id=159004124]
+environment = SubResource("Environment_v56b3")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="World" unique_id=27885211]
+transform = Transform3D(-0.8660254, -0.50000006, -2.1855696e-08, 0, -4.371139e-08, 1, -0.50000006, 0.8660254, 3.7855173e-08, 0, 0, 0)
+light_energy = 0.75
+shadow_enabled = true
+directional_shadow_max_distance = 300.0

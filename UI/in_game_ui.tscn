@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://csg1k32wrj18r"]
+
+[ext_resource type="PackedScene" uid="uid://bx2r1phdsw8ap" path="res://UI/Game Rules/game_rules.tscn" id="1_jpmjn"]
+[ext_resource type="PackedScene" uid="uid://bbjspavayu0ps" path="res://UI/Side Panel/side_panel.tscn" id="2_d0vji"]
+[ext_resource type="PackedScene" uid="uid://cnnwqtw5v0xlv" path="res://UI/Debug UI/debug_ui.tscn" id="3_b4smu"]
+[ext_resource type="PackedScene" uid="uid://c2x5n44xmawdu" path="res://UI/Map Select/map_select.tscn" id="4_d0vji"]
+[ext_resource type="PackedScene" uid="uid://b0s17udntor8n" path="res://UI/Loading Screen/loading_screen.tscn" id="5_b4smu"]
+
+[node name="InGameUI" type="Node" unique_id=2035084139]
+
+[node name="SidePanel" parent="." unique_id=2109798762 instance=ExtResource("2_d0vji")]
+
+[node name="Debug UI" parent="." unique_id=1393435431 instance=ExtResource("3_b4smu")]
+
+[node name="Game Rules" parent="." unique_id=1198288722 instance=ExtResource("1_jpmjn")]
+visible = false
+
+[node name="MapSelect" parent="." unique_id=1296421919 instance=ExtResource("4_d0vji")]
+visible = false
+
+[node name="LoadingScreen" parent="." unique_id=1877683174 instance=ExtResource("5_b4smu")]
+visible = false

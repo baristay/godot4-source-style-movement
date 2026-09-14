@@ -1,0 +1,809 @@
+[gd_scene format=3 uid="uid://bx2r1phdsw8ap"]
+
+[ext_resource type="Script" uid="uid://bp6r0sgq5fp1u" path="res://UI/Game Rules/game_rules.gd" id="1_u3ugm"]
+
+[node name="Game Rules" type="Control" unique_id=1198288722]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 700.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_u3ugm")
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=948779614]
+custom_minimum_size = Vector2(500, 1030)
+custom_maximum_size = Vector2(16000, 2009.43)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -720.0
+offset_top = -515.0
+offset_right = -19.999512
+offset_bottom = 515.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer" unique_id=1086421822]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer/MarginContainer" unique_id=2009972448]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 7
+
+[node name="Customisation" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1657504633]
+layout_mode = 2
+
+[node name="CustomizationL" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation" unique_id=1214320299]
+custom_minimum_size = Vector2(40, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Customization"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Sensitivity" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation" unique_id=404487644]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Sensitivity" unique_id=1638539094]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Sensitivity"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Sensitivity" unique_id=928540225]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.01
+max_value = 10.0
+step = 0.01
+value = 3.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Sensitivity" unique_id=1654171966]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.01
+max_value = 10.0
+step = 0.01
+value = 3.0
+
+[node name="Yaw Speed" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation" unique_id=2015300472]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Yaw Speed" unique_id=69148703]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Yaw Speed"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Yaw Speed" unique_id=1690015844]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 1000.0
+step = 0.1
+value = 210.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Yaw Speed" unique_id=542951726]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 1000.0
+step = 0.1
+value = 210.0
+
+[node name="Camera FOV" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation" unique_id=120476124]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Camera FOV" unique_id=756280963]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Camera FOV"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Camera FOV" unique_id=2135669721]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 50.0
+max_value = 130.0
+step = 0.1
+value = 74.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Camera FOV" unique_id=1300749912]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 50.0
+max_value = 130.0
+step = 0.1
+value = 74.0
+
+[node name="Time Scale" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation" unique_id=2016751594]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Time Scale" unique_id=122892145]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Time Scale"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Time Scale" unique_id=2064715024]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 5.0
+step = 0.01
+value = 1.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Time Scale" unique_id=703317399]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 5.0
+step = 0.01
+value = 1.0
+
+[node name="Tick Rate" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation" unique_id=811820706]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Tick Rate" unique_id=1649441245]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Tick Rate"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Tick Rate" unique_id=1866364683]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 10.0
+max_value = 300.0
+value = 67.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Tick Rate" unique_id=1606002763]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 10.0
+max_value = 300.0
+value = 67.0
+
+[node name="Bunny Buffer" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation" unique_id=1002310741]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Bunny Buffer" unique_id=1322170982]
+custom_minimum_size = Vector2(91.895, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Auto Bunny"
+
+[node name="CheckBox" type="CheckBox" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Bunny Buffer" unique_id=1250276045]
+custom_minimum_size = Vector2(103.975, 0)
+layout_mode = 2
+button_pressed = true
+
+[node name="Label2" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Bunny Buffer" unique_id=54249988]
+custom_minimum_size = Vector2(91.895, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Bunny Buffer"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Bunny Buffer" unique_id=1167057107]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.1
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Customisation/Bunny Buffer" unique_id=553689610]
+custom_minimum_size = Vector2(115.565, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 1.0
+step = 0.01
+value = 0.1
+
+[node name="Noclip" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=61472925]
+layout_mode = 2
+
+[node name="CustomizationL" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip" unique_id=1139362147]
+custom_minimum_size = Vector2(40, 25)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Noclip"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Run Speed N" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip" unique_id=978513678]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Run Speed N" unique_id=369421087]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Run Speed (Noclip)"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Run Speed N" unique_id=928247183]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 6000.0
+step = 0.1
+value = 1100.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Run Speed N" unique_id=170794544]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 6000.0
+step = 0.1
+value = 1100.0
+
+[node name="Walk Speed N" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip" unique_id=1258044364]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Walk Speed N" unique_id=370945148]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Walk Speed (Noclip)"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Walk Speed N" unique_id=2127598480]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 6000.0
+step = 0.1
+value = 450.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Walk Speed N" unique_id=1029399429]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 6000.0
+step = 0.1
+value = 450.0
+
+[node name="Duck Speed N" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip" unique_id=144092801]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Duck Speed N" unique_id=465186189]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Duck Speed (Noclip)"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Duck Speed N" unique_id=1812322459]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 6000.0
+step = 0.1
+value = 450.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Duck Speed N" unique_id=535385042]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 6000.0
+step = 0.1
+value = 450.0
+
+[node name="Acceleration N" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip" unique_id=1697784075]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Acceleration N" unique_id=1149333050]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Accelleration (Noclip)"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Acceleration N" unique_id=391103823]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+step = 0.01
+value = 4.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Acceleration N" unique_id=478493077]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+step = 0.01
+value = 4.0
+
+[node name="Friction N" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip" unique_id=910562752]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Friction N" unique_id=952894679]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Friction (Noclip)"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Friction N" unique_id=338337602]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+step = 0.01
+value = 5.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Noclip/Friction N" unique_id=1271599578]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+step = 0.01
+value = 10.0
+
+[node name="Ground Values" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=613530467]
+layout_mode = 2
+
+[node name="GroundValuesL" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values" unique_id=1077972865]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Ground Values"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Run Speed" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values" unique_id=2119984714]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Run Speed" unique_id=1254512900]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Run Speed"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Run Speed" unique_id=260293004]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 1000.0
+step = 0.1
+value = 250.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Run Speed" unique_id=1840391171]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 1000.0
+step = 0.1
+value = 250.0
+
+[node name="Walk Speed" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values" unique_id=1805159052]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Walk Speed" unique_id=977033730]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Walk Speed"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Walk Speed" unique_id=1754043178]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 1000.0
+step = 0.1
+value = 130.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Walk Speed" unique_id=1387674442]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 1000.0
+step = 0.1
+value = 130.0
+
+[node name="Duck Speed" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values" unique_id=544927800]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Duck Speed" unique_id=250837594]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Duck Speed"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Duck Speed" unique_id=1843810632]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.1
+max_value = 1000.0
+step = 0.1
+value = 85.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Duck Speed" unique_id=113037354]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.1
+max_value = 1000.0
+step = 0.1
+value = 85.0
+
+[node name="Acceleration" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values" unique_id=1182107057]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Acceleration" unique_id=712346473]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Acceleration"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Acceleration" unique_id=1309550272]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 50.0
+step = 0.01
+value = 4.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Acceleration" unique_id=1505763672]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 50.0
+step = 0.01
+value = 4.0
+
+[node name="Friction" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values" unique_id=1361607399]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Friction" unique_id=1031087931]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Friction"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Friction" unique_id=192830689]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 50.0
+step = 0.01
+value = 5.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Friction" unique_id=102144114]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 50.0
+step = 0.01
+value = 5.0
+
+[node name="Landing Speed" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values" unique_id=1156991423]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Landing Speed" unique_id=1026036201]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Landing Speed"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Landing Speed" unique_id=509244427]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 1000.0
+step = 0.1
+value = 250.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Ground Values/Landing Speed" unique_id=2039032678]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 1000.0
+step = 0.1
+value = 250.0
+
+[node name="Air Values" type="VBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=2109605467]
+layout_mode = 2
+
+[node name="AirValuesL" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values" unique_id=1771277097]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Air Values"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="Air Wish Speed" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values" unique_id=1056344682]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Air Wish Speed" unique_id=788309282]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Air Wish Speed"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Air Wish Speed" unique_id=255960632]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.01
+max_value = 200.0
+step = 0.01
+value = 30.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Air Wish Speed" unique_id=2043401404]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.01
+max_value = 200.0
+step = 0.01
+value = 30.0
+
+[node name="Air Acceleration" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values" unique_id=1943962332]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Air Acceleration" unique_id=1060106015]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Air Acceleration"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Air Acceleration" unique_id=190394116]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+min_value = 0.01
+max_value = 1000.0
+step = 0.01
+value = 100.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Air Acceleration" unique_id=719572475]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+min_value = 0.01
+max_value = 1000.0
+step = 0.01
+value = 100.0
+
+[node name="Max Air Speed" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values" unique_id=2136413108]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Max Air Speed" unique_id=1510118695]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Max Air Speed"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Max Air Speed" unique_id=1683627227]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 10000.0
+step = 0.1
+value = 400.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Max Air Speed" unique_id=390425673]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 10000.0
+step = 0.1
+value = 400.0
+
+[node name="Jump Force" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values" unique_id=1159132442]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Jump Force" unique_id=1622685417]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Jump Force"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Jump Force" unique_id=1498129943]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 2000.0
+step = 0.1
+value = 301.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Jump Force" unique_id=1563386675]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 2000.0
+step = 0.1
+value = 301.0
+
+[node name="Gravity" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values" unique_id=1163979459]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Gravity" unique_id=1936732999]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Gravity"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Gravity" unique_id=1114481292]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 5000.0
+step = 0.1
+value = 800.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Gravity" unique_id=1707471579]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 5000.0
+step = 0.01
+value = 800.0
+
+[node name="Max Vertical Speed" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values" unique_id=977581948]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+
+[node name="Label" type="Label" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Max Vertical Speed" unique_id=724154982]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Max Vertical Speed"
+
+[node name="Spinbox" type="SpinBox" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Max Vertical Speed" unique_id=1825457280]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+max_value = 10000.0
+step = 0.1
+value = 3500.0
+
+[node name="HSlider" type="HSlider" parent="PanelContainer/MarginContainer/VBoxContainer/Air Values/Max Vertical Speed" unique_id=2099632986]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 1
+max_value = 10000.0
+step = 0.1
+value = 3500.0
+
+[node name="Buttons" type="HBoxContainer" parent="PanelContainer/MarginContainer/VBoxContainer" unique_id=1557885762]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 75
+
+[node name="Default" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/Buttons" unique_id=623292773]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 20
+text = "Default"
+
+[node name="Reset Position" type="Button" parent="PanelContainer/MarginContainer/VBoxContainer/Buttons" unique_id=677728020]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Reset Position"
+
+[node name="PanelContainer2" type="PanelContainer" parent="." unique_id=872931200]
+layout_mode = 1
+offset_left = 250.0
+offset_top = 26.38
+offset_right = 490.00055
+offset_bottom = 321.0
+
+[node name="MarginContainer" type="MarginContainer" parent="PanelContainer2" unique_id=1513585471]
+custom_minimum_size = Vector2(209.4, 230)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer2/MarginContainer" unique_id=1114479720]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=1162176794]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Controls"
+
+[node name="Label2" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=779417278]
+layout_mode = 2
+text = "Movement:  W,A,S,D"
+
+[node name="Label3" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=1540098324]
+layout_mode = 2
+text = "Walk:  Shift"
+
+[node name="Label4" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=2144911504]
+layout_mode = 2
+text = "Duck:  Crouch"
+
+[node name="Label5" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=1902985758]
+layout_mode = 2
+text = "Jump:  Space, Mouse Wheel"
+
+[node name="Label6" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=314637422]
+layout_mode = 2
+text = "Noclip:  E"
+
+[node name="Label7" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=474104650]
+layout_mode = 2
+text = "Reset Position:  R"
+
+[node name="Label8" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=1773108580]
+layout_mode = 2
+text = "Turn Left, Right:  Arrow Keys"
+
+[node name="Label9" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=569060796]
+layout_mode = 2
+text = "Set Start Position:  Q"
+
+[node name="Label10" type="Label" parent="PanelContainer2/MarginContainer/VBoxContainer" unique_id=830729023]
+layout_mode = 2
+text = "Toggle Menu:  ESC"
