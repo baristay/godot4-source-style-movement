@@ -172,7 +172,7 @@ material = ExtResource("4_fsvip")
 
 [node name="CSGPolygon3D" type="CSGPolygon3D" parent="World/Platforms/CSGCombiner3D7" unique_id=86254877]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 43, 2.5, 44)
-polygon = PackedVector2Array(-18, -13, 0, 1, 1, 1, 1, -13)
+polygon = PackedVector2Array(-15, -11, 0, 1, 1, 1, 1, -11)
 depth = 5.0
 material = ExtResource("4_fsvip")
 
