@@ -5,6 +5,7 @@ class_name State
 var config: MovementConfig = preload("res://Player/resource/movement_config.tres")
 @onready var resp_comp:  ResponseComponent  = %ResponseComponent
 @onready var input_comp: InputComponent     = %InputComponent
+@onready var col_comp:   CollisionComponent = %CollisionComponent
 @onready var body:       CharacterBody3D    = owner as CharacterBody3D
 
 # --- Signals ---
@@ -20,7 +21,7 @@ var velocity_2d:     Vector2 = Vector2.ZERO
 var isJumpRequested: bool    = false
 
 
-func _enter() -> void:
+func _enter(_from_restore: bool = false) -> void:
 	pass
 
 func _exit() -> void:
@@ -44,3 +45,11 @@ func _handle_jump_physics(_velocity_3d: Vector3) -> Vector3:
 		_velocity_3d = Vector3(_velocity_2d.x, _velocity_3d.y, _velocity_2d.y)
 	
 	return _velocity_3d
+
+
+func _store_state_info(_dict: Dictionary = {}) -> Dictionary:
+	return _dict
+
+
+func _on_restore(_dict) -> void:
+	pass

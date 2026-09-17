@@ -10,8 +10,18 @@ var isBunnying:     bool = false
 var wasJustEntered: bool = false
 
 
-func _enter() -> void:
-	wasJustEntered = true
+func _store_state_info(dict: Dictionary = {}) -> Dictionary:
+	dict = {"wasJustEntered": wasJustEntered}
+	return dict
+
+
+func _on_restore(dict) -> void:
+	wasJustEntered = dict["wasJustEntered"]
+
+
+func _enter(from_restore: bool = false) -> void:
+	col_comp._set_collision_enabled(true)
+	wasJustEntered = not from_restore
 
 
 func _physics_update(delta: float) -> void:
@@ -54,6 +64,7 @@ func _state_handler() -> void:
 			isBunnying = true
 		else:
 			transitioned.emit(self, "PlayerGround")
+
 
 func _handle_air_physics(delta: float) -> void:
 	if wish_dir_2d.length() == 0:

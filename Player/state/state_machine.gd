@@ -37,9 +37,19 @@ func _on_child_transition(_state: State, new_state_name: String) -> void:
 		return
 	
 	var new_state: State = states.get(new_state_name.to_lower())
+	transition_to_state(new_state)
+
+
+func transition_to_state(new_state: State, is_restore: Dictionary = {}) -> void:
 	if not new_state:
 		return
+	if new_state == current_state:
+		return
 	
-	current_state._exit()
+	if current_state and is_restore.is_empty():
+		current_state._exit()
 	current_state = new_state
 	new_state._enter()
+	
+	if !is_restore.is_empty():
+		new_state._on_restore(is_restore)

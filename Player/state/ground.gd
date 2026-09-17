@@ -10,8 +10,18 @@ var isApplyLandingDrag: bool
 var wasJustEntered: bool
 
 
-func _enter() -> void:
-	wasJustEntered = true
+func _store_state_info(dict: Dictionary = {}) -> Dictionary:
+	dict = {"wasJustEntered": wasJustEntered}
+	return dict
+
+
+func _on_restore(dict) -> void:
+	wasJustEntered = dict["wasJustEntered"]
+
+
+func _enter(from_restore: bool = false) -> void:
+	col_comp._set_collision_enabled(true)
+	wasJustEntered = not from_restore
 
 
 func _physics_update(delta: float) -> void:

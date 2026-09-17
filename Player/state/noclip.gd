@@ -1,17 +1,12 @@
 extends State
 class_name PlayerNoclip
 
-@onready var col_comp:    CollisionComponent = %CollisionComponent
 @export var drag_curve: Curve
 @export var accel_curve: Curve
 
 
-func _enter() -> void:
+func _enter(_from_restore: bool = false) -> void:
 	col_comp._set_collision_enabled(false)
-
-
-func _exit() -> void:
-	col_comp._set_collision_enabled(true)
 
 
 func _physics_update(delta: float) -> void:

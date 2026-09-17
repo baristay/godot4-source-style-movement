@@ -23,6 +23,7 @@ var start_surfaces: Array
 var start_wasOnFloor: bool
 var start_leaving_motion: float
 var start_state: State
+var state_info: Dictionary = {}
 
 
 var initial_position: Vector3 = Vector3.ZERO
@@ -34,6 +35,7 @@ var initial_surfaces: Array
 var initial_wasOnFloor: bool
 var initial_leaving_motion: float
 var initial_state: State
+var initial_state_info: Dictionary
 
 
 func _ready() -> void:
@@ -75,7 +77,7 @@ func _reset_player_position() -> void:
 	resp_comp.surfaces = start_surfaces
 	resp_comp.wasOnFloorLastFrame = start_wasOnFloor
 	resp_comp.leaving_floor_motion = start_leaving_motion
-	state_machine.current_state = start_state
+	state_machine.transition_to_state(start_state, state_info)
 	reset_physics_interpolation()
 
 
@@ -89,6 +91,7 @@ func _set_start_position() -> void:
 	start_wasOnFloor = resp_comp.wasOnFloorLastFrame
 	start_leaving_motion = resp_comp.leaving_floor_motion
 	start_state = state_machine.current_state
+	state_info = start_state._store_state_info()
 	start_position_saved.emit()
 
 
@@ -102,6 +105,7 @@ func _capture_initial_state() -> void:
 	initial_wasOnFloor = resp_comp.wasOnFloorLastFrame
 	initial_leaving_motion = resp_comp.leaving_floor_motion
 	initial_state = state_machine.current_state
+	initial_state_info = initial_state._store_state_info()
 
 
 func _reset_set_position() -> void:
@@ -114,4 +118,5 @@ func _reset_set_position() -> void:
 	start_wasOnFloor = initial_wasOnFloor
 	start_leaving_motion = initial_leaving_motion
 	start_state = initial_state
+	state_info = initial_state_info
 	start_position_saved.emit()
