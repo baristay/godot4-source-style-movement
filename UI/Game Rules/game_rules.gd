@@ -170,4 +170,4 @@ func _find_pair(node_name: String, callback: Callable):
 func _connect_player():
 	var player: Node = get_tree().get_first_node_in_group("player")
 	if player:
-		reset_pressed.connect(player._reset_set_position)
+		reset_pressed.connect(player._reset_to_initial_state)

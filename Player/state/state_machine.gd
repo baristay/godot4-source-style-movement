@@ -1,19 +1,19 @@
 extends Node
-class_name StateMachine
+class_name MovementStateMachine
 
 # --- Exports & Node References ---
-@export var initial_state: State
+@export var initial_state: MovementState
 @onready var resp_comp: ResponseComponent = %ResponseComponent
 @onready var body: CharacterBody3D = owner as CharacterBody3D
 
 # --- Private State ---
 var states:        Dictionary     = {}
-var current_state: State
+var current_state: MovementState
 
 
 func _ready() -> void:
 	for child in get_children():
-		if child is State:
+		if child is MovementState:
 			states[child.name.to_lower()] = child
 			child.transitioned.connect(_on_child_transition)
 	
@@ -32,15 +32,15 @@ func _process_update(delta: float) -> void:
 		current_state._update(delta)
 
 
-func _on_child_transition(_state: State, new_state_name: String) -> void:
+func _on_child_transition(_state: MovementState, new_state_name: String) -> void:
 	if _state != current_state:
 		return
 	
-	var new_state: State = states.get(new_state_name.to_lower())
+	var new_state: MovementState = states.get(new_state_name.to_lower())
 	transition_to_state(new_state)
 
 
-func transition_to_state(new_state: State, is_restore: Dictionary = {}) -> void:
+func transition_to_state(new_state: MovementState, is_restore: Dictionary = {}) -> void:
 	if not new_state:
 		return
 	if new_state == current_state:

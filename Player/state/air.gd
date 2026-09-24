@@ -1,4 +1,4 @@
-extends State
+extends MovementState
 class_name PlayerAir
 
 # --- Private State ---

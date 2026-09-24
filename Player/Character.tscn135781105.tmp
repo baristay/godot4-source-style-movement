@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://b3xcarxu80w1s" path="res://Player/component/input_component.gd" id="4_cgxp2"]
 [ext_resource type="Script" uid="uid://hcn7j66vp31w" path="res://Player/component/crouch_component.gd" id="5_00o3x"]
 [ext_resource type="Script" uid="uid://b4hvwrmcqwn8j" path="res://Player/state/state_machine.gd" id="5_cgxp2"]
-[ext_resource type="Script" uid="uid://c4wd8bam6wyqx" path="res://Player/state/movement_state.gd" id="5_tyf1f"]
+[ext_resource type="Script" uid="uid://c4wd8bam6wyqx" path="res://Player/state/state.gd" id="5_tyf1f"]
 [ext_resource type="Script" uid="uid://bd08ocfim6xxp" path="res://Player/component/collision_component.gd" id="6_00o3x"]
 [ext_resource type="Script" uid="uid://cpesd3lo6l1ux" path="res://Player/state/air.gd" id="6_nv6nb"]
 [ext_resource type="Script" uid="uid://b4u2pxbm5h6bl" path="res://Player/state/ground.gd" id="7_edh1s"]

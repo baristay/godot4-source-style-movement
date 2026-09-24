@@ -1,4 +1,4 @@
-extends State
+extends MovementState
 class_name PlayerNoclip
 
 @export var drag_curve: Curve

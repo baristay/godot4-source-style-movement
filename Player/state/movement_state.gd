@@ -1,5 +1,5 @@
 extends Node
-class_name State
+class_name MovementState
 
 # --- Exports & Node References ---
 var config: MovementConfig = preload("res://Player/resource/movement_config.tres")
