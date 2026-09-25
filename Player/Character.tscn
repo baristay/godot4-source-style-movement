@@ -3,15 +3,20 @@
 [ext_resource type="Script" uid="uid://biqo6youu7kin" path="res://Player/player.gd" id="1_oolk3"]
 [ext_resource type="Script" uid="uid://bgnmnelsn44g4" path="res://Player/component/response_component.gd" id="4_1sclt"]
 [ext_resource type="Script" uid="uid://b3xcarxu80w1s" path="res://Player/component/input_component.gd" id="4_cgxp2"]
-[ext_resource type="Script" uid="uid://hcn7j66vp31w" path="res://Player/component/crouch_component.gd" id="5_00o3x"]
 [ext_resource type="Script" uid="uid://b4hvwrmcqwn8j" path="res://Player/state/movement/movement_state_machine.gd" id="5_cgxp2"]
 [ext_resource type="Script" uid="uid://c4wd8bam6wyqx" path="res://Player/state/movement/movement_state.gd" id="5_tyf1f"]
 [ext_resource type="Script" uid="uid://bd08ocfim6xxp" path="res://Player/component/collision_component.gd" id="6_00o3x"]
 [ext_resource type="Script" uid="uid://cpesd3lo6l1ux" path="res://Player/state/movement/air.gd" id="6_nv6nb"]
 [ext_resource type="Script" uid="uid://b4u2pxbm5h6bl" path="res://Player/state/movement/ground.gd" id="7_edh1s"]
-[ext_resource type="Curve" uid="uid://c45nu1ndvwhig" path="res://Player/Curves/drag_curve.tres" id="9_e422e"]
-[ext_resource type="Curve" uid="uid://bsvn5gwfx5h1g" path="res://Player/Curves/accel_curve.tres" id="10_pwp3b"]
+[ext_resource type="Curve" uid="uid://c45nu1ndvwhig" path="res://Player/curves/drag_curve.tres" id="9_2nl2b"]
+[ext_resource type="Curve" uid="uid://bsvn5gwfx5h1g" path="res://Player/curves/accel_curve.tres" id="10_dvtgv"]
 [ext_resource type="Script" uid="uid://buhbuhvqqcq44" path="res://Player/state/movement/noclip.gd" id="12_bpe73"]
+[ext_resource type="Script" uid="uid://b66kgth2gwd2" path="res://Player/state/crouch/crouch_state.gd" id="12_ylco7"]
+[ext_resource type="Script" uid="uid://bvsg31db6tq63" path="res://Player/state/crouch/crouch_state_machine.gd" id="13_2nl2b"]
+[ext_resource type="Script" uid="uid://dcndmpbkh517o" path="res://Player/state/crouch/standing.gd" id="14_2nl2b"]
+[ext_resource type="Script" uid="uid://hadqv0eegt72" path="res://Player/state/crouch/ducking.gd" id="15_dvtgv"]
+[ext_resource type="Script" uid="uid://dakksey0nhhvu" path="res://Player/state/crouch/unducking.gd" id="16_3kpb3"]
+[ext_resource type="Script" uid="uid://vcqjr7uwt6yj" path="res://Player/state/crouch/ducked.gd" id="17_hqmuf"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pwp3b"]
 margin = 0.0
@@ -69,36 +74,57 @@ unique_name_in_owner = true
 script = ExtResource("6_00o3x")
 metadata/_custom_type_script = "uid://bd08ocfim6xxp"
 
-[node name="CrouchComponent" type="Node" parent="Components" unique_id=1043447501]
-unique_name_in_owner = true
-script = ExtResource("5_00o3x")
-metadata/_custom_type_script = "uid://hcn7j66vp31w"
-
 [node name="MovementState" type="Node" parent="." unique_id=1515095533]
 unique_name_in_owner = true
 script = ExtResource("5_tyf1f")
 metadata/_custom_type_script = "uid://c4wd8bam6wyqx"
 
-[node name="MovementStateMachine" type="Node" parent="MovementState" unique_id=346846850 node_paths=PackedStringArray("initial_state")]
+[node name="MovementStateMachine" type="Node" parent="MovementState" unique_id=929762041 node_paths=PackedStringArray("initial_state")]
 unique_name_in_owner = true
 script = ExtResource("5_cgxp2")
-initial_state = NodePath("PlayerGround")
+initial_state = NodePath("PlayerAir")
+metadata/_custom_type_script = "uid://b4hvwrmcqwn8j"
 
-[node name="PlayerAir" type="Node" parent="MovementState/MovementStateMachine" unique_id=1475895563]
+[node name="PlayerAir" type="Node" parent="MovementState/MovementStateMachine" unique_id=19813455]
 script = ExtResource("6_nv6nb")
 metadata/_custom_type_script = "uid://cpesd3lo6l1ux"
 
-[node name="PlayerGround" type="Node" parent="MovementState/MovementStateMachine" unique_id=920654217]
+[node name="PlayerGround" type="Node" parent="MovementState/MovementStateMachine" unique_id=954547212]
 script = ExtResource("7_edh1s")
-drag_curve = ExtResource("9_e422e")
-accel_curve = ExtResource("10_pwp3b")
+drag_curve = ExtResource("9_2nl2b")
+accel_curve = ExtResource("10_dvtgv")
 metadata/_custom_type_script = "uid://b4u2pxbm5h6bl"
 
-[node name="PlayerNoclip" type="Node" parent="MovementState/MovementStateMachine" unique_id=473832033]
+[node name="PlayerNoclip" type="Node" parent="MovementState/MovementStateMachine" unique_id=615129590]
 script = ExtResource("12_bpe73")
-drag_curve = ExtResource("9_e422e")
-accel_curve = ExtResource("10_pwp3b")
 metadata/_custom_type_script = "uid://buhbuhvqqcq44"
+
+[node name="CrouchState" type="Node" parent="." unique_id=2087778636]
+unique_name_in_owner = true
+script = ExtResource("12_ylco7")
+metadata/_custom_type_script = "uid://b66kgth2gwd2"
+
+[node name="CrouchStateMachine" type="Node" parent="CrouchState" unique_id=311105638 node_paths=PackedStringArray("initial_state")]
+unique_name_in_owner = true
+script = ExtResource("13_2nl2b")
+initial_state = NodePath("CrouchStanding")
+metadata/_custom_type_script = "uid://bvsg31db6tq63"
+
+[node name="CrouchStanding" type="Node" parent="CrouchState/CrouchStateMachine" unique_id=606216762]
+script = ExtResource("14_2nl2b")
+metadata/_custom_type_script = "uid://dcndmpbkh517o"
+
+[node name="CrouchDucking" type="Node" parent="CrouchState/CrouchStateMachine" unique_id=1291191466]
+script = ExtResource("15_dvtgv")
+metadata/_custom_type_script = "uid://hadqv0eegt72"
+
+[node name="CrouchUnducking" type="Node" parent="CrouchState/CrouchStateMachine" unique_id=549725399]
+script = ExtResource("16_3kpb3")
+metadata/_custom_type_script = "uid://dakksey0nhhvu"
+
+[node name="CrouchDucked" type="Node" parent="CrouchState/CrouchStateMachine" unique_id=1540850205]
+script = ExtResource("17_hqmuf")
+metadata/_custom_type_script = "uid://vcqjr7uwt6yj"
 
 [node name="FootPosition" type="Marker3D" parent="." unique_id=615251792]
 unique_name_in_owner = true

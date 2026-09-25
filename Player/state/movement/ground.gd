@@ -11,12 +11,14 @@ var wasJustEntered: bool
 
 
 func _store_state_info(dict: Dictionary = {}) -> Dictionary:
-	dict = {"wasJustEntered": wasJustEntered}
+	dict["wasJustEntered"] = wasJustEntered
+	dict["isApplyLandingDrag"] = isApplyLandingDrag
 	return dict
 
 
 func _on_restore(dict) -> void:
 	wasJustEntered = dict["wasJustEntered"]
+	isApplyLandingDrag = dict["isApplyLandingDrag"]
 
 
 func _enter(from_restore: bool = false) -> void:

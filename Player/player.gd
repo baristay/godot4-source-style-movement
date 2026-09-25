@@ -7,7 +7,7 @@ var config: MovementConfig = preload("res://Player/resource/movement_config.tres
 @onready var input_comp:   InputComponent       = %InputComponent
 @onready var resp_comp:    ResponseComponent    = %ResponseComponent
 @onready var mov_state:    MovementStateMachine = %MovementStateMachine
-@onready var crouch_comp:  CrouchComponent      = %CrouchComponent
+@onready var crouch_state: CrouchStateMachine   = %CrouchStateMachine
 
 # --- Signals ---
 signal speed_changed(velocity_hu: Vector3, pos: Vector3, is_air: bool, delta: float)
@@ -30,6 +30,10 @@ func _ready() -> void:
 	start_snapshot.capture(self)
 
 
+func _process(delta: float) -> void:
+	crouch_state._process_update(delta)
+
+
 func _physics_process(delta: float) -> void:
 	# Checkpoint & Reset controls
 	if input_comp.isSetPosRequested: 
@@ -44,7 +48,7 @@ func _physics_process(delta: float) -> void:
 	velocity = velocity_HU * config.HU_TO_M
 	
 	resp_comp._resolve_motion(delta)
-	crouch_comp._duck_update_process(delta)
+	crouch_state._physics_process_update(delta)
 	
 	var is_in_air: bool = false
 	if mov_state.current_state:
@@ -88,8 +92,10 @@ class PlayerStateSnapshot:
 	var surfaces: Array
 	var wasOnFloor: bool
 	var leaving_motion: float
-	var state: MovementState
-	var state_info: Dictionary
+	var movement_state: MovementState
+	var movement_state_info: Dictionary
+	var crouch_state: CrouchState
+	var crouch_state_info: Dictionary
 	
 	
 	func capture(player: Player) -> void:
@@ -98,18 +104,23 @@ class PlayerStateSnapshot:
 		cam_rotation = player.input_comp.cam.rotation
 		velocity = player.velocity
 		
-		# Referans sorunlarını önlemek için duplicate(true) [Deep Copy] kullanıyoruz
 		cur_surfaces = player.resp_comp.cur_state_surfaces.duplicate(true)
 		surfaces = player.resp_comp.surfaces.duplicate(true)
 		
 		wasOnFloor = player.resp_comp.wasOnFloorLastFrame
 		leaving_motion = player.resp_comp.leaving_floor_motion
-		state = player.mov_state.current_state
 		
-		if state and state.has_method("_store_state_info"):
-			state_info = state._store_state_info()
+		movement_state = player.mov_state.current_state
+		if movement_state and movement_state.has_method("_store_state_info"):
+			movement_state_info = movement_state._store_state_info()
 		else:
-			state_info = {}
+			movement_state_info = {}
+		
+		crouch_state = player.crouch_state.current_state
+		if crouch_state and crouch_state.has_method("_store_state_info"):
+			crouch_state_info = crouch_state._store_state_info()
+		else:
+			crouch_state_info = {}
 	
 	
 	func apply(player: Player) -> void:
@@ -123,7 +134,10 @@ class PlayerStateSnapshot:
 		player.resp_comp.wasOnFloorLastFrame = wasOnFloor
 		player.resp_comp.leaving_floor_motion = leaving_motion
 		
-		if state:
-			player.mov_state.transition_to_state(state, state_info)
-			
+		if movement_state:
+			player.mov_state.transition_to_state(movement_state, movement_state_info)
+		
+		if crouch_state:
+			player.crouch_state.transition_to_state(crouch_state, crouch_state_info)
+		
 		player.reset_physics_interpolation()

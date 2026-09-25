@@ -11,7 +11,7 @@ var wasJustEntered: bool = false
 
 
 func _store_state_info(dict: Dictionary = {}) -> Dictionary:
-	dict = {"wasJustEntered": wasJustEntered}
+	dict["wasJustEntered"] = wasJustEntered
 	return dict
 
 
