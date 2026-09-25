@@ -97,6 +97,8 @@ metadata/_custom_type_script = "uid://b4u2pxbm5h6bl"
 
 [node name="PlayerNoclip" type="Node" parent="MovementState/MovementStateMachine" unique_id=615129590]
 script = ExtResource("12_bpe73")
+drag_curve = ExtResource("9_2nl2b")
+accel_curve = ExtResource("10_dvtgv")
 metadata/_custom_type_script = "uid://buhbuhvqqcq44"
 
 [node name="CrouchState" type="Node" parent="." unique_id=2087778636]

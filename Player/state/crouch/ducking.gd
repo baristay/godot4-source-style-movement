@@ -54,7 +54,6 @@ func _finish_duck_position_shift(is_in_air: bool, progress: float, p_started_on_
 	if is_in_air:
 		if p_started_on_ground and (progress > 0.0 and progress < 1.0):
 			body.global_position.y += col_comp.CROUCH_JUMP_MARGIN
-			print("a")
 		else:
 			body.global_position.y += col_comp.HULL_DELTA - col_comp.CROUCH_MARGIN
 	

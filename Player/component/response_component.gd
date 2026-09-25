@@ -388,7 +388,7 @@ func _try_step_up(query_transform: Transform3D, original_motion: Vector3) -> Dic
 		fwd_travel = h_motion
 		fwd_remainder = Vector3.ZERO
 	
-	if fwd_travel.length() < h_motion.length() * 0.1:  # eşik değeri ayarlanabilir
+	if fwd_travel.length() < h_motion.length() * 0.1:
 		return {}
 	
 	raised.origin += fwd_travel
