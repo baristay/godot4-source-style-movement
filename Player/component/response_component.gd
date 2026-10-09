@@ -119,10 +119,7 @@ func _handle_collision(velocity: Vector3, delta: float) -> void:
 				if is_on_floor and absf(normal.y) > 0.001 and !normal.is_equal_approx(Vector3.UP):
 					var horizontal_remainder := Vector3(remainder.x, 0.0, remainder.z)
 					var dy: float = -(horizontal_remainder.dot(normal)) / normal.y
-					if dy > 0:
-						motion = Vector3(remainder.x, dy, remainder.z)
-					else:
-						motion = _slide(remainder, Vector3.UP if is_on_floor else normal)
+					motion = Vector3(remainder.x, maxf(dy, -snap_height), remainder.z)
 				else:
 					motion = _slide(remainder, Vector3.UP if is_on_floor else normal)
 			2:
@@ -143,11 +140,14 @@ func _handle_collision(velocity: Vector3, delta: float) -> void:
 				
 				if floor_idx != -1 and absf(bump_planes[other_idx].y) < 0.001:
 					var floor_normal: Vector3 = bump_planes[floor_idx]
+					var wall_normal: Vector3 = bump_planes[other_idx]
+					
 					if absf(floor_normal.y) > 0.001 and !floor_normal.is_equal_approx(Vector3.UP):
-						var horizontal_vel := Vector3(motion.x, 0.0, motion.z)
-						var dy2: float = -(horizontal_vel.dot(floor_normal)) / floor_normal.y
-						if dy2 != 0.0:
-							motion.y = dy2
+						var h := Vector3(remainder.x, 0.0, remainder.z)
+						h = _slide(h, Vector3(wall_normal.x, 0.0, wall_normal.z).normalized())
+						
+						var dy2: float = -(h.dot(floor_normal)) / floor_normal.y
+						motion = Vector3(h.x, maxf(dy2, -snap_height), h.z)
 			_:
 				motion = Vector3.ZERO
 		
@@ -218,6 +218,12 @@ func _correct_velocity(velocity: Vector3, motion: Vector3, delta: float):
 	leaving_floor_motion = motion.y / delta
 
 
+## Rebuilds the list of surfaces the body is currently touching.
+## Does not rely on the physics engine's contact reporting:
+## it casts a short ground check below the body, merges the surfaces hit during 
+## this frame's movement and any floor normals found by snapping, then keeps only the
+## closest floor and updates the current state (FLOOR / SURF / AIR).
+## Called again after snapping because the body's position may have changed.
 func _update_collisions() -> void:
 	surfaces = []
 	
@@ -269,6 +275,7 @@ func _snap_down_update() -> void:
 	
 	if can_snap:
 		_snap_down(snap_height, SNAP_SAFE_MARGIN)
+	
 
 
 func _forced_snap_down_update(_snap_height, _safe_margin) -> bool:
@@ -369,7 +376,7 @@ func _try_step_up(query_transform: Transform3D, original_motion: Vector3) -> Dic
 	var h_motion := Vector3(original_motion.x, 0.0, original_motion.z)
 	
 	# Phase 1: UP
-	var up_result := col_comp._test_collision(col_comp.collision_shape.shape, query_transform, Vector3.UP * step_height, true, false)
+	var up_result := col_comp._test_collision(shape, query_transform, Vector3.UP * step_height, true, false)
 	var up_y := step_height
 	if up_result.get_collision_count() > 0:
 		up_y = up_result.get_travel().y

@@ -199,6 +199,11 @@ transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.965
 size = Vector3(3, 0.48876953, 3)
 material = ExtResource("4_a3gga")
 
+[node name="CSGBox3D12" type="CSGBox3D" parent="CSGCombiner3D/Walls" unique_id=1901009107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.5, -2.994009)
+size = Vector3(7, 4, 1)
+material = ExtResource("4_a3gga")
+
 [node name="Path3D" type="Path3D" parent="CSGCombiner3D" unique_id=892217538]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 11)
 curve = SubResource("Curve3D_vhb61")

@@ -3,7 +3,6 @@ class_name MovementConfig
 
 const HU_TO_M = 0.01905
 
-# "Default" butonu bu alanları resetler. Sensitivity kasıtlı olarak dışarıda.
 const DEFAULTS := {
 	"yaw_speed": 210.0,
 	"camera_fov": 74.0,
@@ -33,7 +32,6 @@ const DEFAULTS := {
 	"gravity": 800.0,
 }
 
-# Default'a dahil değil — kullanıcı ayarında kalır
 @export var sensitivity: float = 3.0
 
 @export var yaw_speed: float = DEFAULTS.yaw_speed

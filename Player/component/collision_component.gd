@@ -40,7 +40,7 @@ var cur_shape: Shape3D
 var cur_shape_local_transform: Transform3D
 
 var node3d: Node3D
-@export var debug_draw: bool = false
+@export var debug_draw: bool = true
 var debug_mesh: MeshInstance3D
 
 
