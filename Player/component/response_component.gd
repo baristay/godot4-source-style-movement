@@ -1,3 +1,13 @@
+## Custom "collide and slide" movement resolver for a CharacterBody3D.
+##
+## Replaces move_and_slide() to give precise, Source/Quake-style control over
+## slopes, steps, ramps (surf) and wall/crease sliding.
+##
+## Per-frame pipeline (see _resolve_motion):
+## _handle_collision: seed probe, simulate the movement, step up ledges, apply it, end probe
+## _update_collisions: build the surface list and the current state (FLOOR / SURF / AIR)
+## _snap_down_update: fallback that re-attaches to the ground when it was suddenly lost
+## _correct_velocity: remove velocity components that point into surfaces
 extends Node
 class_name ResponseComponent
 
@@ -20,7 +30,7 @@ var cur_state_surfaces: Dictionary = {"type": CurrentState.AIR, "normal": Vector
 
 # --- Collide and Slide Parameters ---
 const MAX_BOUNCE: int = 5
-const MOTION_EPSILON: float = 3.9
+const MIN_HORIZONTAL_ACCEL: float = 3.9
 const SAFE_MARGIN: float = 0.002
 const SNAP_SAFE_MARGIN: float = 0.002
 const COLLISION_CHECK_MARGIN: float = 0.0025
@@ -32,8 +42,8 @@ var snap_height: float = 0
 var step_height: float = 0.0
 var wasOnFloorLastFrame: bool = false
 var snapped_normals: Array[Vector3] = []
-var motion_epsilon: float = 0.0
 var leaving_floor_motion: float = 0.0
+var sim_motion: Vector3 = Vector3.ZERO
 
 
 func _ready() -> void:
@@ -41,8 +51,11 @@ func _ready() -> void:
 	snap_height = config.snap_height
 
 
+func _is_negligible_horizontal(motion: Vector3, delta: float) -> bool:
+	return Vector2(motion.x, motion.z).length() < MIN_HORIZONTAL_ACCEL * delta * delta
+
+
 func _resolve_motion(delta: float) -> void:
-	motion_epsilon = MOTION_EPSILON * delta
 	var start_position := body.global_position
 	
 	_handle_collision(body.velocity, delta)
@@ -61,14 +74,24 @@ func _handle_collision(velocity: Vector3, delta: float) -> void:
 	var total := Vector3.ZERO
 	collided_surfaces = []
 	
-	var bump_planes: Array[Vector3] = []
-	var bump_is_floor: Array[bool] = []
-	var bump_surf_types: Array = []
+	# Planes constraining the motion this frame (plane_types is parallel to planes)
+	var planes: Array[Vector3] = []
+	var plane_types: Array[int] = []
 	
 	var query_transform := body.global_transform
 	
+	# Seed probe: learn the starting surface up front.
+	# Floor is not seeded while moving upward (jumping).
+	var seed_ground := _probe_ground(query_transform)
+	if not seed_ground.is_empty():
+		var seed_type: int = seed_ground["type"]
+		var seed_normal: Vector3 = seed_ground["normal"]
+		if seed_type == SurfaceType.RAMP or (seed_type == SurfaceType.FLOOR and motion.y <= 0.0):
+			planes.append(seed_normal)
+			plane_types.append(seed_type)
+			motion = _project(motion, seed_normal, seed_type)
+	
 	for _i in MAX_BOUNCE:
-		var is_on_floor: bool = false
 		var result := col_comp._test_collision(col_comp.collision_shape.shape, query_transform, motion, true, false)
 		if result.get_collision_count() == 0:
 			total += motion
@@ -81,95 +104,97 @@ func _handle_collision(velocity: Vector3, delta: float) -> void:
 		
 		total += travel
 		query_transform.origin += travel
-		
 		_add_surface(collided_surfaces, surf_type, normal, travel.length())
 		
-		if surf_type == SurfaceType.WALL and Vector2(motion.x, motion.z).length() / delta >= motion_epsilon:
-			var step := _step_up_update(query_transform, remainder, collided_surfaces, bump_planes, bump_is_floor, bump_surf_types)
+		# Step up
+		if surf_type == SurfaceType.WALL and not _is_negligible_horizontal(motion, delta):
+			var step := _step_up_update(query_transform, remainder, collided_surfaces)
 			if not step.is_empty():
-				start_position = step["start_position"]
-				total = step["total"]
-				query_transform = step["query_transform"]
-				motion = step["motion"]
+				start_position = body.global_position
+				total = Vector3.ZERO
+				query_transform = body.global_transform
+				planes = [step["normal"]]
+				plane_types = [SurfaceType.FLOOR]
+				motion = _follow_floor(step["motion"], step["normal"])
 				continue
 		
-		if surf_type == SurfaceType.FLOOR:
-			is_on_floor = true
-		
+		# Plane registration: a new floor replaces the old one (avoids a floor+floor
+		# crease), other types are skipped if a similar plane is already registered.
 		var is_new_plane := true
-		for p in bump_planes:
-			if p.is_equal_approx(normal):
-				is_new_plane = false
-				break
-		
-		if is_new_plane:
-			for i in bump_planes.size():
-				if bump_surf_types[i] == surf_type \
-				and bump_planes[i].dot(normal) > RAMP_DUPLICATE_DOT_THRESHOLD:
+		if surf_type == SurfaceType.FLOOR:
+			for i in range(planes.size() - 1, -1, -1):
+				if plane_types[i] == SurfaceType.FLOOR:
+					planes.remove_at(i)
+					plane_types.remove_at(i)
+		else:
+			for i in planes.size():
+				if plane_types[i] == surf_type and planes[i].dot(normal) > RAMP_DUPLICATE_DOT_THRESHOLD:
 					is_new_plane = false
 					break
 		
 		if is_new_plane:
-			bump_planes.append(normal)
-			bump_is_floor.append(is_on_floor)
-			bump_surf_types.append(surf_type)
+			planes.append(normal)
+			plane_types.append(surf_type)
 		
-		match bump_planes.size():
+		match planes.size():
 			1:
-				if is_on_floor and absf(normal.y) > 0.001 and !normal.is_equal_approx(Vector3.UP):
-					var horizontal_remainder := Vector3(remainder.x, 0.0, remainder.z)
-					var dy: float = -(horizontal_remainder.dot(normal)) / normal.y
-					motion = Vector3(remainder.x, maxf(dy, -snap_height), remainder.z)
-				else:
-					motion = _slide(remainder, Vector3.UP if is_on_floor else normal)
+				motion = _project(remainder, normal, surf_type)
 			2:
-				var crease := bump_planes[0].cross(bump_planes[1])
+				var crease := planes[0].cross(planes[1])
 				if crease.length_squared() > 0.0001:
 					crease = crease.normalized()
-					var signed_dist := remainder.dot(crease)
-					motion = crease * signed_dist
+					motion = crease * remainder.dot(crease)
 				else:
-					motion = _slide(remainder, Vector3.UP if is_on_floor else normal)
+					motion = _slide(remainder, Vector3.UP if surf_type == SurfaceType.FLOOR else normal)
 				
-				var floor_idx := -1
-				var other_idx := -1
-				if bump_is_floor[0]:
-					floor_idx = 0; other_idx = 1
-				elif bump_is_floor[1]:
-					floor_idx = 1; other_idx = 0
-				
-				if floor_idx != -1 and absf(bump_planes[other_idx].y) < 0.001:
-					var floor_normal: Vector3 = bump_planes[floor_idx]
-					var wall_normal: Vector3 = bump_planes[other_idx]
-					
-					if absf(floor_normal.y) > 0.001 and !floor_normal.is_equal_approx(Vector3.UP):
+				# Sloped floor + vertical wall: slide along the wall, then stick to the floor
+				var floor_idx := plane_types.find(SurfaceType.FLOOR)
+				if floor_idx != -1:
+					var floor_normal := planes[floor_idx]
+					var wall_normal := planes[1 - floor_idx]
+					if absf(wall_normal.y) < 0.001 and absf(floor_normal.y) > 0.001 and not floor_normal.is_equal_approx(Vector3.UP):
 						var h := Vector3(remainder.x, 0.0, remainder.z)
 						h = _slide(h, Vector3(wall_normal.x, 0.0, wall_normal.z).normalized())
-						
-						var dy2: float = -(h.dot(floor_normal)) / floor_normal.y
-						motion = Vector3(h.x, maxf(dy2, -snap_height), h.z)
+						motion = _follow_floor(h, floor_normal)
 			_:
 				motion = Vector3.ZERO
 		
 		query_transform.origin += normal * DISTANCE_MARGIN
 	
-	if Vector2(total.x, total.z).length() / delta < motion_epsilon:
+	if _is_negligible_horizontal(total, delta):
 		total.x = 0.0
 		total.z = 0.0
+	sim_motion = total
 	
 	col_comp._expand_collision(col_comp.collision_shape.shape, -(Vector3.ONE * SAFE_MARGIN))
 	body.move_and_collide(total, false, 0, false, 1)
 	col_comp._expand_collision(col_comp.collision_shape.shape, (Vector3.ONE * SAFE_MARGIN))
 	body.move_and_collide(Vector3.ZERO, false, 0, false, 1)
 	
-	total = body.global_position - start_position
-	
-	if Vector2(total.x, total.z).length() / delta < motion_epsilon:
+	var moved := body.global_position - start_position
+	if _is_negligible_horizontal(moved, delta):
 		body.global_position.x = start_position.x
 		body.global_position.z = start_position.z
-		total.x = 0.0
-		total.z = 0.0
 	body.force_update_transform()
+	
+	# End probe: the end-of-frame state (FLOOR / SURF / AIR) comes from here
+	var ground := _probe_ground(body.global_transform)
+	if not ground.is_empty():
+		_add_surface(collided_surfaces, ground["type"], ground["normal"], ground["distance"])
+
+
+## Casts a short probe straight down from the given transform.
+## Returns {} when nothing is hit, otherwise {type, normal, distance}.
+func _probe_ground(from: Transform3D) -> Dictionary:
+	if !col_comp.collision_shape:
+		return {}
+	var r := col_comp._test_collision(
+		col_comp.collision_shape.shape, from,
+		Vector3.DOWN * COLLISION_CHECK_MARGIN, true, false)
+	if r.get_collision_count() == 0:
+		return {}
+	var n := r.get_collision_normal()
+	return {"type": _classify(n), "normal": n, "distance": r.get_travel().length()}
 
 
 func _correct_velocity(velocity: Vector3, motion: Vector3, delta: float):
@@ -200,7 +225,7 @@ func _correct_velocity(velocity: Vector3, motion: Vector3, delta: float):
 		_:
 			out_velocity = Vector3.ZERO
 	
-	if Vector2(motion.x, motion.z).length() / delta < motion_epsilon:
+	if _is_negligible_horizontal(motion, delta):
 		out_velocity.x = 0.0
 		out_velocity.z = 0.0
 	
@@ -215,67 +240,27 @@ func _correct_velocity(velocity: Vector3, motion: Vector3, delta: float):
 	if leaving_floor_motion < 0.0 and wasOnFloorLastFrame and cur_state_surfaces["type"] != CurrentState.FLOOR and !input_comp.isJumpRequested:
 		body.velocity.y = leaving_floor_motion
 	
-	leaving_floor_motion = motion.y / delta
+	leaving_floor_motion = sim_motion.y / delta
 
 
-## Rebuilds the list of surfaces the body is currently touching.
-## Does not rely on the physics engine's contact reporting:
-## it casts a short ground check below the body, merges the surfaces hit during 
-## this frame's movement and any floor normals found by snapping, then keeps only the
-## closest floor and updates the current state (FLOOR / SURF / AIR).
+## Rebuilds the current surface list from this frame's collisions (including the
+## end probe) and any floors found by snapping, then updates the current state.
 ## Called again after snapping because the body's position may have changed.
 func _update_collisions() -> void:
-	surfaces = []
-	
-	var result: PhysicsTestMotionResult3D
-	
-	result = _check_for_ground()
-	if result.get_collision_count() != 0:
-		var normal := result.get_collision_normal()
-		_add_surface(surfaces, _classify(normal), normal, result.get_travel().length())
-	
-	for i in range(collided_surfaces.size()):
-		_add_surface(surfaces, collided_surfaces[i]["type"], collided_surfaces[i]["normal"], collided_surfaces[i]["distance"])
-	
-	if not snapped_normals.is_empty():
-		for n in snapped_normals:
-			_add_surface(surfaces, SurfaceType.FLOOR, n, 0.0)
-	
+	surfaces = collided_surfaces.duplicate()
+	for n in snapped_normals:
+		_add_surface(surfaces, SurfaceType.FLOOR, n, 0.0)
+	snapped_normals.clear()
 	_keep_closest_floor(surfaces)
 	_get_current_state(surfaces)
-	
-	snapped_normals.clear()
 
 
-func _check_for_ground() -> PhysicsTestMotionResult3D:
-	var motion: = Vector3.DOWN * COLLISION_CHECK_MARGIN
-	var start_position := body.global_position
-	var transform = Transform3D(body.global_basis, start_position)
-	
-	if !col_comp.collision_shape:
-		return PhysicsTestMotionResult3D.new()
-	
-	return col_comp._test_collision(col_comp.collision_shape.shape, transform, motion, true, false)
-
-
+## Only snaps when the body just left the floor (was on floor, now is not).
 func _snap_down_update() -> void:
-	var can_snap: bool = true
-	
-	var is_floor_state: bool = cur_state_surfaces["type"] == CurrentState.FLOOR
-	
-	if is_floor_state and body.velocity.y <= 0.0:
-		_snap_down(snap_height, 0.0)
-	
-	var should_snap: bool = wasOnFloorLastFrame and not is_floor_state
-	
-	if not should_snap:
-		can_snap = false
 	if body.velocity.y > 0.0:
-		can_snap = false
-	
-	if can_snap:
+		return
+	if wasOnFloorLastFrame and cur_state_surfaces["type"] != CurrentState.FLOOR:
 		_snap_down(snap_height, SNAP_SAFE_MARGIN)
-	
 
 
 func _forced_snap_down_update(_snap_height, _safe_margin) -> bool:
@@ -328,15 +313,7 @@ func _find_floor_below(shape: Shape3D, test_transform: Transform3D, _snap_height
 	return {"normal": normal, "travel_y": result.get_travel().y}
 
 
-func _step_up_update(
-	query_transform: Transform3D,
-	motion: Vector3,
-	p_collided_surfaces: Array,
-	bump_planes: Array[Vector3],
-	bump_is_floor: Array[bool],
-	bump_surf_types: Array,
-	) -> Dictionary:
-	
+func _step_up_update(query_transform: Transform3D, motion: Vector3, p_collided_surfaces: Array) -> Dictionary:
 	if not wasOnFloorLastFrame:
 		return {}
 	if body.velocity.y > 0.0:
@@ -359,16 +336,7 @@ func _step_up_update(
 	
 	_add_surface(p_collided_surfaces, SurfaceType.FLOOR, step_result["normal"], 0.0)
 	
-	bump_planes.clear()
-	bump_is_floor.clear()
-	bump_surf_types.clear()
-	
-	return {
-		"start_position": body.global_position,
-		"total": Vector3.ZERO,
-		"query_transform": body.global_transform,
-		"motion": step_result["remainder"],
-	}
+	return {"normal": step_result["normal"], "motion": step_result["remainder"]}
 
 
 func _try_step_up(query_transform: Transform3D, original_motion: Vector3) -> Dictionary:
@@ -419,6 +387,20 @@ func _try_step_up(query_transform: Transform3D, original_motion: Vector3) -> Dic
 
 
 # --- Helpers ---
+## Floor: stick the motion to the plane. Anything else: only remove the part going into it.
+func _project(v: Vector3, n: Vector3, type: int) -> Vector3:
+	return _follow_floor(v, n) if type == SurfaceType.FLOOR else _slide(v, n)
+
+
+## Projects a motion onto a floor plane. On slopes dy is computed from the plane
+## equation (m·n = 0); on flat floor y becomes 0.
+func _follow_floor(v: Vector3, n: Vector3) -> Vector3:
+	if absf(n.y) < 0.001 or n.is_equal_approx(Vector3.UP):
+		return Vector3(v.x, 0.0, v.z)
+	var dy := -(v.x * n.x + v.z * n.z) / n.y
+	return Vector3(v.x, dy, v.z)
+
+
 func _slide(v: Vector3, n: Vector3) -> Vector3:
 	var d := v.dot(n)
 	return v if d >= 0.0 else v - n * d
