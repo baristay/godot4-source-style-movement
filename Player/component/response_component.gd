@@ -44,6 +44,7 @@ var wasOnFloorLastFrame: bool = false
 var snapped_normals: Array[Vector3] = []
 var leaving_floor_motion: float = 0.0
 var sim_motion: Vector3 = Vector3.ZERO
+var _snap_test_shape: BoxShape3D = BoxShape3D.new()
 
 
 func _ready() -> void:
@@ -56,6 +57,9 @@ func _is_negligible_horizontal(motion: Vector3, delta: float) -> bool:
 
 
 func _resolve_motion(delta: float) -> void:
+	if delta <= 0.0:
+		return
+	
 	var start_position := body.global_position
 	
 	_handle_collision(body.velocity, delta)
@@ -166,9 +170,10 @@ func _handle_collision(velocity: Vector3, delta: float) -> void:
 		total.z = 0.0
 	sim_motion = total
 	
-	col_comp._expand_collision(col_comp.collision_shape.shape, -(Vector3.ONE * SAFE_MARGIN))
+	var real_shape := col_comp.collision_shape.shape
+	var saved_size := _shrink_shape(real_shape, Vector3.ONE * SAFE_MARGIN)
 	body.move_and_collide(total, false, 0, false, 1)
-	col_comp._expand_collision(col_comp.collision_shape.shape, (Vector3.ONE * SAFE_MARGIN))
+	_restore_shape(real_shape, saved_size)
 	body.move_and_collide(Vector3.ZERO, false, 0, false, 1)
 	
 	var moved := body.global_position - start_position
@@ -193,7 +198,7 @@ func _probe_ground(from: Transform3D) -> Dictionary:
 		Vector3.DOWN * COLLISION_CHECK_MARGIN, true, false)
 	if r.get_collision_count() == 0:
 		return {}
-	var n := r.get_collision_normal()
+	var n := _pick_ground_normal(r)
 	return {"type": _classify(n), "normal": n, "distance": r.get_travel().length()}
 
 
@@ -240,7 +245,10 @@ func _correct_velocity(velocity: Vector3, motion: Vector3, delta: float):
 	if leaving_floor_motion < 0.0 and wasOnFloorLastFrame and cur_state_surfaces["type"] != CurrentState.FLOOR and !input_comp.isJumpRequested:
 		body.velocity.y = leaving_floor_motion
 	
-	leaving_floor_motion = sim_motion.y / delta
+	if wasOnFloorLastFrame and cur_state_surfaces["type"] == CurrentState.FLOOR:
+		leaving_floor_motion = sim_motion.y / delta
+	else:
+		leaving_floor_motion = 0.0
 
 
 ## Rebuilds the current surface list from this frame's collisions (including the
@@ -277,18 +285,22 @@ func _snap_down(_snap_height: float, _safe_margin: float) -> bool:
 	elif _safe_margin != 0.0:
 		# Second attempt: shrink the shape horizontally in case a wall/ledge
 		# edge was caught instead of the floor surface below it
-		col_comp._set_test_shape(col_comp.collision_shape.shape)
-		col_comp._expand_collision(col_comp.test_shape, -(Vector3(1, 0, 1) * _safe_margin))
+		var real_shape := col_comp.collision_shape.shape
+		var real_box := real_shape as BoxShape3D
+		if real_box == null:
+			return false
 		
-		floor_info = _find_floor_below(col_comp.test_shape, body.global_transform, _snap_height)
+		_snap_test_shape.size = real_box.size - Vector3(1, 0, 1) * (_safe_margin * 2.0)
+		
+		floor_info = _find_floor_below(_snap_test_shape, body.global_transform, _snap_height)
 		if floor_info.is_empty():
 			return false
 		
-		# Shrink the real shape, move down, then expand it back out and
+		# Shrink the real shape, move down, then restore it and
 		# resolve any resulting overlap from the expansion
-		col_comp._expand_collision(col_comp.collision_shape.shape, -(Vector3(1, 0, 1) * _safe_margin))
+		var saved_size := _shrink_shape(real_shape, Vector3(1, 0, 1) * _safe_margin)
 		body.move_and_collide(Vector3(0, floor_info["travel_y"], 0), false, 0, false, 1)
-		col_comp._expand_collision(col_comp.collision_shape.shape, (Vector3(1, 0, 1) * _safe_margin))
+		_restore_shape(real_shape, saved_size)
 		body.move_and_collide(Vector3.ZERO, false, 0, false, 1)
 		body.force_update_transform()
 	
@@ -323,10 +335,11 @@ func _step_up_update(query_transform: Transform3D, motion: Vector3, p_collided_s
 	if step_result.is_empty():
 		return {}
 	
-	col_comp._expand_collision(col_comp.collision_shape.shape, -(Vector3.ONE * SAFE_MARGIN))
+	var real_shape := col_comp.collision_shape.shape
+	var saved_size := _shrink_shape(real_shape, Vector3.ONE * SAFE_MARGIN)
 	body.global_position = step_result["origin"]
 	body.force_update_transform()
-	col_comp._expand_collision(col_comp.collision_shape.shape, (Vector3.ONE * SAFE_MARGIN))
+	_restore_shape(real_shape, saved_size)
 	body.move_and_collide(Vector3.ZERO, false, 0, false, 1)
 	body.force_update_transform()
 	
@@ -404,6 +417,30 @@ func _follow_floor(v: Vector3, n: Vector3) -> Vector3:
 func _slide(v: Vector3, n: Vector3) -> Vector3:
 	var d := v.dot(n)
 	return v if d >= 0.0 else v - n * d
+
+
+func _pick_ground_normal(r: PhysicsTestMotionResult3D) -> Vector3:
+	var best := r.get_collision_normal(0)
+	for i in range(1, r.get_collision_count()):
+		var n := r.get_collision_normal(i)
+		if n.y > best.y:
+			best = n
+	return best
+
+
+func _shrink_shape(shape: Shape3D, margin: Vector3) -> Vector3:
+	var box := shape as BoxShape3D
+	if box == null:
+		return Vector3.ZERO
+	var saved := box.size
+	box.size = saved - margin * 2.0
+	return saved
+
+
+func _restore_shape(shape: Shape3D, saved_size: Vector3) -> void:
+	var box := shape as BoxShape3D
+	if box != null:
+		box.size = saved_size
 
 
 func _classify(normal: Vector3) -> SurfaceType:
