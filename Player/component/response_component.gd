@@ -44,6 +44,7 @@ var wasOnFloorLastFrame: bool = false
 var snapped_normals: Array[Vector3] = []
 var leaving_floor_motion: float = 0.0
 var sim_motion: Vector3 = Vector3.ZERO
+var start_position: Vector3 = Vector3.ZERO
 var _snap_test_shape: BoxShape3D = BoxShape3D.new()
 
 
@@ -55,25 +56,29 @@ func _ready() -> void:
 func _is_negligible_horizontal(motion: Vector3, delta: float) -> bool:
 	return Vector2(motion.x, motion.z).length() < MIN_HORIZONTAL_ACCEL * delta * delta
 
-
+## Entry point. Call once per physics frame instead of move_and_slide().
 func _resolve_motion(delta: float) -> void:
 	if delta <= 0.0:
 		return
 	
-	var start_position := body.global_position
+	start_position = body.global_position
 	
 	_handle_collision(body.velocity, delta)
 	_update_collisions()
 	_snap_down_update()
-	if not snapped_normals.is_empty(): _update_collisions()
-	
-	var total := body.global_position - start_position
-	_correct_velocity(body.velocity, total, delta)
+	_correct_velocity(body.velocity, delta)
 	wasOnFloorLastFrame = cur_state_surfaces["type"] == CurrentState.FLOOR
 
 
+## Moves the body by velocity * delta using collide and slide.
+##
+## The motion is first simulated on a copy of the body's transform: a seed
+## probe finds the starting surface, then up to [constant MAX_BOUNCE] sweeps
+## slide the motion along the hit planes (1 plane: slide, 2 planes: follow the
+## crease, 3+: stop). Hitting a wall may trigger a step-up. The result is then
+## applied to the real body, and an end probe records the surface it ended on.
 func _handle_collision(velocity: Vector3, delta: float) -> void:
-	var start_position := body.global_position
+	var move_start := start_position
 	var motion := velocity * delta
 	var total := Vector3.ZERO
 	collided_surfaces = []
@@ -111,15 +116,28 @@ func _handle_collision(velocity: Vector3, delta: float) -> void:
 		_add_surface(collided_surfaces, surf_type, normal, travel.length())
 		
 		# Step up
+		# A wall may just be a ledge. If the body was grounded, try to climb it
+		# _step_up_update sweeps up, forward and down.
+		#
+		# Unlike the rest of the simulation, a successful step-up moves the REAL body
+		# onto the ledge immediately. The simulation then restarts from there:
 		if surf_type == SurfaceType.WALL and not _is_negligible_horizontal(motion, delta):
 			var step := _step_up_update(query_transform, remainder, collided_surfaces)
 			if not step.is_empty():
-				start_position = body.global_position
+				# The final move should only measure what happens after the step.
+				move_start = body.global_position
+				# Motion accumulated so far is already included in the climb.
 				total = Vector3.ZERO
+				# Resync the simulation copy with the body's new position.
 				query_transform = body.global_transform
+				# Old planes (wall, previous floor) no longer apply. The ledge's
+				# floor is the only constraint now.
 				planes = [step["normal"]]
 				plane_types = [SurfaceType.FLOOR]
+				# Continue with the horizontal motion left after the forward sweep,
+				# following the ledge's floor.
 				motion = _follow_floor(step["motion"], step["normal"])
+				# Skip plane registration for this hit, the wall is already handled.
 				continue
 		
 		# Plane registration: a new floor replaces the old one (avoids a floor+floor
@@ -176,10 +194,10 @@ func _handle_collision(velocity: Vector3, delta: float) -> void:
 	_restore_shape(real_shape, saved_size)
 	body.move_and_collide(Vector3.ZERO, false, 0, false, 1)
 	
-	var moved := body.global_position - start_position
+	var moved := body.global_position - move_start
 	if _is_negligible_horizontal(moved, delta):
-		body.global_position.x = start_position.x
-		body.global_position.z = start_position.z
+		body.global_position.x = move_start.x
+		body.global_position.z = move_start.z
 	body.force_update_transform()
 	
 	# End probe: the end-of-frame state (FLOOR / SURF / AIR) comes from here
@@ -202,7 +220,15 @@ func _probe_ground(from: Transform3D) -> Dictionary:
 	return {"type": _classify(n), "normal": n, "distance": r.get_travel().length()}
 
 
-func _correct_velocity(velocity: Vector3, motion: Vector3, delta: float):
+## Removes the parts of the velocity that point into the touched surfaces, and
+## writes the result to the body. Runs last in the pipeline, after the position
+## has been fully resolved (collide and slide, step-up and snapping).
+##
+## Also keeps the body glued to downward slopes: walking off one would otherwise
+## launch it horizontally, so the slope's downward speed is kept for a frame
+## (see leaving_floor_motion).
+func _correct_velocity(velocity: Vector3, delta: float):
+	var motion := body.global_position - start_position
 	var out_velocity := velocity
 	match surfaces.size():
 		0:
@@ -263,18 +289,32 @@ func _update_collisions() -> void:
 	_get_current_state(surfaces)
 
 
-## Only snaps when the body just left the floor (was on floor, now is not).
+## Re-attaches the body to the ground when it was suddenly lost, for example when
+## walking off a slope or a small drop. Only snaps right after leaving the floor
+## and not while moving upward, so jumps are never cancelled.
 func _snap_down_update() -> void:
-	if body.velocity.y > 0.0:
-		return
-	if wasOnFloorLastFrame and cur_state_surfaces["type"] != CurrentState.FLOOR:
+	if wasOnFloorLastFrame and cur_state_surfaces["type"] != CurrentState.FLOOR and body.velocity.y <= 0.0:
 		_snap_down(snap_height, SNAP_SAFE_MARGIN)
+	
+	# Snapping moved the body, so rebuild the surfaces and state.
+	# This also picks up floors from _forced_snap_down_update.
+	if not snapped_normals.is_empty(): _update_collisions()
 
 
+## Snaps without the "just left the floor" condition of _snap_down_update.
+## Meant to be called from other components. It does not rebuild the surfaces itself.
+## The snapped floor is picked up by the next _update_collisions.
 func _forced_snap_down_update(_snap_height, _safe_margin) -> bool:
 	return _snap_down(_snap_height, _safe_margin)
 
 
+
+## Moves the body down onto the floor below it, up to [param _snap_height].
+## Returns true if it snapped. On success the floor normal is stored in
+## snapped_normals and the vertical velocity is zeroed.
+##
+## If _safe_margin is not zero, a failed first attempt is retried with a
+## horizontally narrower shape (see below).
 func _snap_down(_snap_height: float, _safe_margin: float) -> bool:
 	# First attempt: test with the real collision shape
 	var floor_info := _find_floor_below(col_comp.collision_shape.shape, body.global_transform, _snap_height)
@@ -311,6 +351,11 @@ func _snap_down(_snap_height: float, _safe_margin: float) -> bool:
 	return true
 
 
+## Sweeps shape downward by _snap_height and returns {normal, travel_y}
+## if it lands on a walkable floor, otherwise {}.
+## travel_y is negative (downward). Returns {} when nothing is hit,
+## when the shape could not move down (already touching), or when the surface is
+## not a floor, so steep slopes and walls are never snapped to.
 func _find_floor_below(shape: Shape3D, test_transform: Transform3D, _snap_height: float) -> Dictionary:
 	var result := col_comp._test_collision(shape, test_transform, Vector3.DOWN * _snap_height, true, false)
 	if result.get_collision_count() == 0:
@@ -325,6 +370,14 @@ func _find_floor_below(shape: Shape3D, test_transform: Transform3D, _snap_height
 	return {"normal": normal, "travel_y": result.get_travel().y}
 
 
+## Tries to climb a ledge hit during the simulation, and applies it if it works.
+##
+## Only allowed right after being grounded and while not moving upward (so jumps
+## are never turned into steps). On success the real body is moved on top of the
+## ledge, and p_collided_surfaces is updated: the blocking wall(s) are
+## removed and the ledge's floor is added.
+## Returns {} on failure, otherwise {normal, motion}: the ledge's floor normal and
+## the horizontal motion left to apply.
 func _step_up_update(query_transform: Transform3D, motion: Vector3, p_collided_surfaces: Array) -> Dictionary:
 	if not wasOnFloorLastFrame:
 		return {}
@@ -352,6 +405,17 @@ func _step_up_update(query_transform: Transform3D, motion: Vector3, p_collided_s
 	return {"normal": step_result["normal"], "motion": step_result["remainder"]}
 
 
+## Checks whether the wall in front of the body is a climbable ledge.
+## Only a query: nothing is moved.
+##
+## Three sweeps from query_transform: up by step_height (or until a ceiling),
+## forward by the horizontal part of original_motion, then down to find
+## the landing surface.
+## Fails (returns {}) if the forward sweep is still blocked, which means the
+## obstacle is taller than the step height, or if the landing surface is not a
+## walkable floor (so steep slopes are never stepped onto).
+## Otherwise returns {origin, normal, remainder}: where the body would end up, the
+## ledge's floor normal, and the horizontal motion left after the forward sweep.
 func _try_step_up(query_transform: Transform3D, original_motion: Vector3) -> Dictionary:
 	var shape := col_comp.collision_shape.shape
 	var h_motion := Vector3(original_motion.x, 0.0, original_motion.z)
@@ -414,11 +478,15 @@ func _follow_floor(v: Vector3, n: Vector3) -> Vector3:
 	return Vector3(v.x, dy, v.z)
 
 
+## Removes the part of [param v] that points into the plane with normal [param n].
+## Motion moving away from the plane is returned unchanged.
 func _slide(v: Vector3, n: Vector3) -> Vector3:
 	var d := v.dot(n)
 	return v if d >= 0.0 else v - n * d
 
 
+## A probe can touch several surfaces at once (for example at an edge). The most
+## upward-facing normal is the one that best represents the ground.
 func _pick_ground_normal(r: PhysicsTestMotionResult3D) -> Vector3:
 	var best := r.get_collision_normal(0)
 	for i in range(1, r.get_collision_count()):
@@ -428,6 +496,8 @@ func _pick_ground_normal(r: PhysicsTestMotionResult3D) -> Vector3:
 	return best
 
 
+## Shrinks a BoxShape3D by [param margin] on each side and returns the original
+## size to pass to [method _restore_shape]. Does nothing for other shape types.
 func _shrink_shape(shape: Shape3D, margin: Vector3) -> Vector3:
 	var box := shape as BoxShape3D
 	if box == null:
@@ -443,6 +513,8 @@ func _restore_shape(shape: Shape3D, saved_size: Vector3) -> void:
 		box.size = saved_size
 
 
+## Classifies a normal as floor, ramp, wall or ceiling using FLOOR_DOT and RAMP_DOT.
+## Normals pointing only slightly downward still count as walls.
 func _classify(normal: Vector3) -> SurfaceType:
 	var up_dot := normal.dot(Vector3.UP)
 	if   normal == Vector3.ZERO: return SurfaceType.NONE
@@ -452,6 +524,8 @@ func _classify(normal: Vector3) -> SurfaceType:
 	else:                        return SurfaceType.WALL
 
 
+## Adds a surface unless one of the same type with a nearly identical normal is
+## already in the list.
 func _add_surface(new_surfaces: Array, type: SurfaceType, normal: Vector3, distance: float) -> void:
 	for s in new_surfaces:
 		if s["type"] == type and s["normal"].dot(normal) > RAMP_DUPLICATE_DOT_THRESHOLD:
@@ -459,6 +533,7 @@ func _add_surface(new_surfaces: Array, type: SurfaceType, normal: Vector3, dista
 	new_surfaces.append({"type": type, "normal": normal, "distance": distance})
 
 
+## Any floor wins and means FLOOR. Otherwise the closest ramp means SURF, else AIR.
 func _get_current_state(_surface: Array) -> void:
 	var isOnGround: bool = false
 	var isSurfing:  bool = false
@@ -484,6 +559,8 @@ func _get_current_state(_surface: Array) -> void:
 		cur_state_surfaces = {"type": CurrentState.AIR, "normal": normal}
 
 
+## Keeps only the closest floor, so at most one floor is ever in the list.
+## Otherwise two floors would be treated as a crease in [method _correct_velocity].
 func _keep_closest_floor(surface_list: Array) -> void:
 	var closest_index := -1
 	var closest_distance := INF
