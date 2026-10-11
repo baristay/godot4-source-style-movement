@@ -18,7 +18,7 @@ const HU_TO_M = MovementConfig.HU_TO_M
 # --- State ---
 var velocity_3d:     Vector3 = Vector3.ZERO
 var velocity_2d:     Vector2 = Vector2.ZERO
-var isJumpRequested: bool    = false
+var is_jump_requested: bool    = false
 
 
 func _enter(_from_restore: bool = false) -> void:

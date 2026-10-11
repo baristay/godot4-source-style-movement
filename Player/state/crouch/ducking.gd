@@ -30,7 +30,7 @@ func _enter(_from_restore: bool = false) -> void:
 
 
 func _physics_update(delta: float) -> void:
-	if not input_comp.isDuckRequested:
+	if not input_comp.is_duck_requested:
 		transitioned.emit(self, "CrouchUnducking")
 		return
 		

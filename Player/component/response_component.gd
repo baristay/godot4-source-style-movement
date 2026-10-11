@@ -40,7 +40,7 @@ const RAMP_DUPLICATE_DOT_THRESHOLD: float = 0.95
 # --- Parameters ---
 var snap_height: float = 0
 var step_height: float = 0.0
-var wasOnFloorLastFrame: bool = false
+var was_on_floor_last_frame: bool = false
 var snapped_normals: Array[Vector3] = []
 var leaving_floor_motion: float = 0.0
 var sim_motion: Vector3 = Vector3.ZERO
@@ -67,13 +67,13 @@ func _resolve_motion(delta: float) -> void:
 	_update_collisions()
 	_snap_down_update()
 	_correct_velocity(body.velocity, delta)
-	wasOnFloorLastFrame = cur_state_surfaces["type"] == CurrentState.FLOOR
+	was_on_floor_last_frame = cur_state_surfaces["type"] == CurrentState.FLOOR
 
 
 ## Moves the body by velocity * delta using collide and slide.
 ##
 ## The motion is first simulated on a copy of the body's transform: a seed
-## probe finds the starting surface, then up to [constant MAX_BOUNCE] sweeps
+## probe finds the starting surface, then up to MAX_BOUNCE sweeps
 ## slide the motion along the hit planes (1 plane: slide, 2 planes: follow the
 ## crease, 3+: stop). Hitting a wall may trigger a step-up. The result is then
 ## applied to the real body, and an end probe records the surface it ended on.
@@ -268,10 +268,10 @@ func _correct_velocity(velocity: Vector3, delta: float):
 	if cur_state_surfaces["type"] == CurrentState.FLOOR:
 		body.velocity.y = 0.0
 	
-	if leaving_floor_motion < 0.0 and wasOnFloorLastFrame and cur_state_surfaces["type"] != CurrentState.FLOOR and !input_comp.isJumpRequested:
+	if leaving_floor_motion < 0.0 and was_on_floor_last_frame and cur_state_surfaces["type"] != CurrentState.FLOOR and !input_comp.is_jump_requested:
 		body.velocity.y = leaving_floor_motion
 	
-	if wasOnFloorLastFrame and cur_state_surfaces["type"] == CurrentState.FLOOR:
+	if was_on_floor_last_frame and cur_state_surfaces["type"] == CurrentState.FLOOR:
 		leaving_floor_motion = sim_motion.y / delta
 	else:
 		leaving_floor_motion = 0.0
@@ -293,7 +293,7 @@ func _update_collisions() -> void:
 ## walking off a slope or a small drop. Only snaps right after leaving the floor
 ## and not while moving upward, so jumps are never cancelled.
 func _snap_down_update() -> void:
-	if wasOnFloorLastFrame and cur_state_surfaces["type"] != CurrentState.FLOOR and body.velocity.y <= 0.0:
+	if was_on_floor_last_frame and cur_state_surfaces["type"] != CurrentState.FLOOR and body.velocity.y <= 0.0:
 		_snap_down(snap_height, SNAP_SAFE_MARGIN)
 	
 	# Snapping moved the body, so rebuild the surfaces and state.
@@ -309,7 +309,7 @@ func _forced_snap_down_update(_snap_height, _safe_margin) -> bool:
 
 
 
-## Moves the body down onto the floor below it, up to [param _snap_height].
+## Moves the body down onto the floor below it, up to _snap_height.
 ## Returns true if it snapped. On success the floor normal is stored in
 ## snapped_normals and the vertical velocity is zeroed.
 ##
@@ -379,7 +379,7 @@ func _find_floor_below(shape: Shape3D, test_transform: Transform3D, _snap_height
 ## Returns {} on failure, otherwise {normal, motion}: the ledge's floor normal and
 ## the horizontal motion left to apply.
 func _step_up_update(query_transform: Transform3D, motion: Vector3, p_collided_surfaces: Array) -> Dictionary:
-	if not wasOnFloorLastFrame:
+	if not was_on_floor_last_frame:
 		return {}
 	if body.velocity.y > 0.0:
 		return {}
@@ -478,7 +478,7 @@ func _follow_floor(v: Vector3, n: Vector3) -> Vector3:
 	return Vector3(v.x, dy, v.z)
 
 
-## Removes the part of [param v] that points into the plane with normal [param n].
+## Removes the part of v that points into the plane with normal n.
 ## Motion moving away from the plane is returned unchanged.
 func _slide(v: Vector3, n: Vector3) -> Vector3:
 	var d := v.dot(n)
@@ -496,8 +496,8 @@ func _pick_ground_normal(r: PhysicsTestMotionResult3D) -> Vector3:
 	return best
 
 
-## Shrinks a BoxShape3D by [param margin] on each side and returns the original
-## size to pass to [method _restore_shape]. Does nothing for other shape types.
+## Shrinks a BoxShape3D by margin on each side and returns the original
+## size to pass to _restore_shape. Does nothing for other shape types.
 func _shrink_shape(shape: Shape3D, margin: Vector3) -> Vector3:
 	var box := shape as BoxShape3D
 	if box == null:
@@ -535,32 +535,32 @@ func _add_surface(new_surfaces: Array, type: SurfaceType, normal: Vector3, dista
 
 ## Any floor wins and means FLOOR. Otherwise the closest ramp means SURF, else AIR.
 func _get_current_state(_surface: Array) -> void:
-	var isOnGround: bool = false
-	var isSurfing:  bool = false
+	var is_on_ground: bool = false
+	var is_surfing:  bool = false
 	var normal:  Vector3 = Vector3.ZERO
 	var closest_ramp_distance: float = INF
 	
 	for surface in _surface:
 		if surface["type"] == SurfaceType.FLOOR:
-			isOnGround = true
-			normal     = surface["normal"]
+			is_on_ground = true
+			normal       = surface["normal"]
 			break
 		elif surface["type"] == SurfaceType.RAMP:
 			if surface["distance"] < closest_ramp_distance:
 				closest_ramp_distance = surface["distance"]
-				isSurfing = true
-				normal    = surface["normal"]
+				is_surfing = true
+				normal     = surface["normal"]
 	
-	if isOnGround:
+	if is_on_ground:
 		cur_state_surfaces = {"type": CurrentState.FLOOR, "normal": normal}
-	elif isSurfing:
+	elif is_surfing:
 		cur_state_surfaces = {"type": CurrentState.SURF, "normal": normal}
 	else:
 		cur_state_surfaces = {"type": CurrentState.AIR, "normal": normal}
 
 
 ## Keeps only the closest floor, so at most one floor is ever in the list.
-## Otherwise two floors would be treated as a crease in [method _correct_velocity].
+## Otherwise two floors would be treated as a crease in _correct_velocity.
 func _keep_closest_floor(surface_list: Array) -> void:
 	var closest_index := -1
 	var closest_distance := INF

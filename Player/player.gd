@@ -36,9 +36,9 @@ func _process(delta: float) -> void:
 
 func _physics_process(delta: float) -> void:
 	# Checkpoint & Reset controls
-	if input_comp.isSetPosRequested: 
+	if input_comp.is_set_pos_requested: 
 		_save_checkpoint()
-	if input_comp.isResetRequested: 
+	if input_comp.is_reset_requested: 
 		_load_checkpoint()
 	
 	input_comp._input_update(delta)
@@ -90,7 +90,7 @@ class PlayerStateSnapshot:
 	var velocity: Vector3
 	var cur_surfaces: Dictionary
 	var surfaces: Array
-	var wasOnFloor: bool
+	var was_on_floor: bool
 	var leaving_motion: float
 	var movement_state: MovementState
 	var movement_state_info: Dictionary
@@ -107,7 +107,7 @@ class PlayerStateSnapshot:
 		cur_surfaces = player.resp_comp.cur_state_surfaces.duplicate(true)
 		surfaces = player.resp_comp.surfaces.duplicate(true)
 		
-		wasOnFloor = player.resp_comp.wasOnFloorLastFrame
+		was_on_floor = player.resp_comp.was_on_floor_last_frame
 		leaving_motion = player.resp_comp.leaving_floor_motion
 		
 		movement_state = player.mov_state.current_state
@@ -131,7 +131,7 @@ class PlayerStateSnapshot:
 		
 		player.resp_comp.cur_state_surfaces = cur_surfaces.duplicate(true)
 		player.resp_comp.surfaces = surfaces.duplicate(true)
-		player.resp_comp.wasOnFloorLastFrame = wasOnFloor
+		player.resp_comp.was_on_floor_last_frame = was_on_floor
 		player.resp_comp.leaving_floor_motion = leaving_motion
 		
 		if movement_state:

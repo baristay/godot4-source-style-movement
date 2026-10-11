@@ -39,7 +39,7 @@ func _simple_spline(t: float) -> float:
 
 
 func _update_input_duck_state(is_ducked: bool) -> void:
-	input_comp.isDuckState = is_ducked
+	input_comp.is_duck_state = is_ducked
 
 
 func _store_state_info(_dict: Dictionary = {}) -> Dictionary:

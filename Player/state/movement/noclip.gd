@@ -27,13 +27,13 @@ func _physics_update(delta: float) -> void:
 	
 	body.velocity_HU = velocity_3d
 	
-	if input_comp.isNoclipRequested:
+	if input_comp.is_noclip_requested:
 		transitioned.emit(self, "PlayerAir")
 
 
 func _cur_speed_calculator(run_speed: float, walk_speed: float, duck_speed: float) -> float:
-	if input_comp.isDuckState: return duck_speed
-	elif input_comp.isWalkRequested: return walk_speed
+	if input_comp.is_duck_state: return duck_speed
+	elif input_comp.is_walk_requested: return walk_speed
 	else: return run_speed
 
 
@@ -41,8 +41,8 @@ func _cur_accel_calculator() -> float:
 	const run: float = 335
 	const walk: float = 337.7
 	const duck: float = 335.05
-	if input_comp.isDuckState: return duck
-	elif input_comp.isWalkRequested: return walk
+	if input_comp.is_duck_state: return duck
+	elif input_comp.is_walk_requested: return walk
 	else: return run
 
 

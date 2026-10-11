@@ -15,7 +15,7 @@ enum CurrentTab {GAMERULES, OPTIONS, MAPSELECT, NONE}
 signal tab_changed(new_tab: CurrentTab)
 signal active_changed(is_active: bool)
 
-const IsActiveOnStart: bool = true
+const is_active_on_start: bool = true
 const StartTab: CurrentTab = CurrentTab.GAMERULES
 var _last_tab: CurrentTab = StartTab
 
@@ -53,7 +53,7 @@ func _ready() -> void:
 	call_deferred("_activate_on_start")
 
 func _activate_on_start() -> void:
-	is_active = IsActiveOnStart
+	is_active = is_active_on_start
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):

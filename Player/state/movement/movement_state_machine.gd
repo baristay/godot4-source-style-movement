@@ -40,15 +40,15 @@ func _on_child_transition(_state: MovementState, new_state_name: String) -> void
 	transition_to_state(new_state)
 
 
-func transition_to_state(new_state: MovementState, is_restore: Dictionary = {}) -> void:
-	if not new_state or (new_state == current_state and is_restore.is_empty()):
+func transition_to_state(new_state: MovementState, restore_info: Dictionary = {}) -> void:
+	if not new_state or (new_state == current_state and restore_info.is_empty()):
 		return
 	
-	if current_state and is_restore.is_empty():
+	if current_state and restore_info.is_empty():
 		current_state._exit()
 		
 	current_state = new_state
-	new_state._enter(not is_restore.is_empty())
+	new_state._enter(not restore_info.is_empty())
 	
-	if not is_restore.is_empty():
-		new_state._on_restore(is_restore)
+	if not restore_info.is_empty():
+		new_state._on_restore(restore_info)

@@ -9,13 +9,13 @@ var config: MovementConfig = preload("res://Player/resource/movement_config.tres
 # --- Public State ---
 var wish_dir:       Vector3 = Vector3.ZERO
 var wish_dir_full:  Vector3 = Vector3.ZERO
-var isJumpRequested:   bool = false
-var isWalkRequested:   bool = false
-var isDuckRequested:   bool = false
-var isDuckState:       bool = false
-var isNoclipRequested: bool = false
-var isResetRequested:  bool = false
-var isSetPosRequested: bool = false
+var is_jump_requested:   bool = false
+var is_walk_requested:   bool = false
+var is_duck_requested:   bool = false
+var is_duck_state:       bool = false
+var is_noclip_requested: bool = false
+var is_reset_requested:  bool = false
+var is_set_pos_requested: bool = false
 
 # --- Private State ---
 var _mouse_accumulated: Vector2 = Vector2.ZERO
@@ -62,30 +62,30 @@ func _handle_keyboard_turn(delta: float) -> void:
 func _handle_input(delta) -> void:
 	#Jump
 	if config.auto_bunny and Input.is_action_pressed("jump"):
-		isJumpRequested = true
+		is_jump_requested = true
 		_jump_buffer_counter = 0.0
 	else:
 		if Input.is_action_just_pressed("jump"):
 			_jump_buffer_counter = config.bunny_buffer
-			isJumpRequested = true
+			is_jump_requested = true
 		else:
 			_jump_buffer_counter = maxf(_jump_buffer_counter - delta, 0.0)
-			isJumpRequested = _jump_buffer_counter > 0.0
+			is_jump_requested = _jump_buffer_counter > 0.0
 	
 	#Walk
-	isWalkRequested = Input.is_action_pressed("walk")
+	is_walk_requested = Input.is_action_pressed("walk")
 	
 	#Crouch
-	isDuckRequested = Input.is_action_pressed("crouch")
+	is_duck_requested = Input.is_action_pressed("crouch")
 	
 	#Noclip
-	isNoclipRequested = Input.is_action_just_pressed("noclip")
+	is_noclip_requested = Input.is_action_just_pressed("noclip")
 	
 	#Reset
-	isResetRequested = Input.is_action_just_pressed("resetpos")
+	is_reset_requested = Input.is_action_just_pressed("resetpos")
 	
 	#Set Position
-	isSetPosRequested = Input.is_action_just_pressed("set_start_pos")
+	is_set_pos_requested = Input.is_action_just_pressed("set_start_pos")
 	
 	#Movement
 	var raw: Vector2 = Input.get_vector("left", "right", "up", "down")
