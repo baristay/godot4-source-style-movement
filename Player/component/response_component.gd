@@ -53,9 +53,6 @@ func _ready() -> void:
 	snap_height = config.snap_height
 
 
-func _is_negligible_horizontal(motion: Vector3, delta: float) -> bool:
-	return Vector2(motion.x, motion.z).length() < MIN_HORIZONTAL_ACCEL * delta * delta
-
 ## Entry point. Call once per physics frame instead of move_and_slide().
 func _resolve_motion(delta: float) -> void:
 	if delta <= 0.0:
@@ -511,6 +508,10 @@ func _restore_shape(shape: Shape3D, saved_size: Vector3) -> void:
 	var box := shape as BoxShape3D
 	if box != null:
 		box.size = saved_size
+
+
+func _is_negligible_horizontal(motion: Vector3, delta: float) -> bool:
+	return Vector2(motion.x, motion.z).length() < MIN_HORIZONTAL_ACCEL * delta * delta
 
 
 ## Classifies a normal as floor, ramp, wall or ceiling using FLOOR_DOT and RAMP_DOT.
