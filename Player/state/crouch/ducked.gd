@@ -13,5 +13,14 @@ func _enter(_from_restore: bool = false) -> void:
 
 
 func _physics_update(_delta: float) -> void:
-	if not input_comp.is_duck_requested:
+	if input_comp.is_duck_requested:
+		return
+	
+	if not _can_unduck():
+		return
+	
+	if _is_in_air():
+		_finish_unduck(true)
+		transitioned.emit(self, "CrouchStanding")
+	else:
 		transitioned.emit(self, "CrouchUnducking")

@@ -34,7 +34,7 @@ func _physics_update(delta: float) -> void:
 		transitioned.emit(self, "CrouchUnducking")
 		return
 		
-	var is_in_air: bool = resp_comp.cur_state_surfaces["type"] != ResponseComponent.CurrentState.FLOOR
+	var is_in_air: bool = _is_in_air()
 	
 	state_machine.crouch_progress += delta / col_comp.TIME_TO_DUCK
 	
@@ -46,15 +46,3 @@ func _physics_update(delta: float) -> void:
 		_set_duck_eye_offset(_simple_spline(state_machine.crouch_progress))
 	
 	_update_input_duck_state(true)
-
-
-func _finish_duck_position_shift(is_in_air: bool, progress: float, p_started_on_ground: bool) -> void:
-	col_comp._set_ducked()
-	
-	if is_in_air:
-		if p_started_on_ground and (progress > 0.0 and progress < 1.0):
-			body.global_position.y += col_comp.CROUCH_JUMP_MARGIN
-		else:
-			body.global_position.y += col_comp.HULL_DELTA - col_comp.CROUCH_MARGIN
-	
-	body.force_update_transform()
