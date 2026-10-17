@@ -59,7 +59,7 @@ The core movement system is considered **feature-complete**. Current work is foc
 
 ### Tweaking values
 
-All movement defaults live in `Player/resource/movement_config.gd`. Every component reads them from a single shared instance (`MovementConfig.get_shared()`), so changes made through the Gamerule UI at runtime apply everywhere immediately. If you write your own scripts, get the config the same way:
+All movement defaults live in `Player/component/movement_config.gd`. Every component reads them from a single shared instance (`MovementConfig.get_shared()`), so changes made through the Gamerule UI at runtime apply everywhere immediately. If you write your own scripts, get the config the same way:
 
 ```gdscript
 var config: MovementConfig = MovementConfig.get_shared()
