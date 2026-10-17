@@ -1,6 +1,6 @@
 extends Control
 
-var config: MovementConfig = preload("res://Player/resource/movement_config.tres")
+var config: MovementConfig = MovementConfig.get_shared()
 
 @onready var velocity = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Velocity
 @onready var horizontal_speed = $PanelContainer/MarginContainer/VBoxContainer/HBoxContainer2/HorizontalSpeed

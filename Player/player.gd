@@ -14,7 +14,7 @@ extends CharacterBody3D
 class_name Player
  
 # --- Exports & Node References ---
-var config: MovementConfig = preload("res://Player/resource/movement_config.tres")
+var config: MovementConfig = MovementConfig.get_shared()
  
 @onready var input_comp:   InputComponent       = %InputComponent
 @onready var resp_comp:    ResponseComponent    = %ResponseComponent

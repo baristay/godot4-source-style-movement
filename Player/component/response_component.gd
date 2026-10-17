@@ -12,7 +12,7 @@ extends Node
 class_name ResponseComponent
 
 # --- Exports & Node References ---
-var config: MovementConfig = preload("res://Player/resource/movement_config.tres")
+var config: MovementConfig = MovementConfig.get_shared()
 @onready var col_comp: CollisionComponent = %CollisionComponent
 @onready var input_comp: InputComponent = %InputComponent
 @onready var body: CharacterBody3D = owner as CharacterBody3D

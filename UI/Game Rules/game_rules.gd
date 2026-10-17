@@ -1,6 +1,6 @@
 extends Control
 
-var config: MovementConfig = preload("res://Player/resource/movement_config.tres")
+var config: MovementConfig = MovementConfig.get_shared()
 
 const PROPERTY_MAP := {
 	"Yaw Speed": "yaw_speed",

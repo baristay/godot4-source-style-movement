@@ -10,7 +10,7 @@ extends Node
 class_name InputComponent
 
 # --- Exports & Node References ---
-var config: MovementConfig = preload("res://Player/resource/movement_config.tres")
+var config: MovementConfig = MovementConfig.get_shared()
 @onready var head: Node = %Head
 @onready var cam: Camera3D = %Camera3D
 

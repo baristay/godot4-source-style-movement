@@ -2,7 +2,7 @@ extends Node
 class_name MovementState
 
 # --- Exports & Node References ---
-var config: MovementConfig = preload("res://Player/resource/movement_config.tres")
+var config: MovementConfig = MovementConfig.get_shared()
 @onready var resp_comp:  ResponseComponent  = %ResponseComponent
 @onready var input_comp: InputComponent     = %InputComponent
 @onready var col_comp:   CollisionComponent = %CollisionComponent

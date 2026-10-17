@@ -73,6 +73,16 @@ const step_height: float = 0.35
 const snap_height: float = 0.35
 
 
+static var _shared: MovementConfig
+
+## The single config instance that every component, state and UI panel reads and writes.
+## Created in code, so nothing depends on where the Player folder lives in the project.
+static func get_shared() -> MovementConfig:
+	if _shared == null:
+		_shared = MovementConfig.new()
+	return _shared
+
+
 func reset_movement_to_default() -> void:
 	for key in DEFAULTS.keys():
 		set(key, DEFAULTS[key])
