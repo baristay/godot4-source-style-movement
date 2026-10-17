@@ -49,12 +49,21 @@ The core movement system is considered **feature-complete**. Current work is foc
 
 ## Use in your project
 
-1. Copy the `Player` folder into your project root (it must stay at `res://Player`).
+1. Copy the `Player` folder anywhere into your project.
 2. Open `Player/project_setup.gd` in the script editor and run it via **File → Run**.
    It adds the required input actions (existing ones are skipped) and sets these project settings:
    Jolt Physics, 67 physics ticks per second, physics interpolation on, vsync off.
    **Existing values of these settings will be overwritten.**
 3. Restart the editor.
+4. Drag `Player/Character.tscn` into any scene with collision geometry. That's it, the movement system is ready to use.
+
+### Tweaking values
+
+All movement defaults live in `Player/resource/movement_config.gd`. Every component reads them from a single shared instance (`MovementConfig.get_shared()`), so changes made through the Gamerule UI at runtime apply everywhere immediately. If you write your own scripts, get the config the same way:
+
+```gdscript
+var config: MovementConfig = MovementConfig.get_shared()
+```
 
 ## Acknowledgements
 
