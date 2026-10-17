@@ -114,7 +114,7 @@ func _handle_input(delta) -> void:
 	is_noclip_requested = Input.is_action_just_pressed("noclip")
 	
 	# Reset: one-frame request, true only on the frame the key is pressed
-	is_reset_requested = Input.is_action_just_pressed("resetpos")
+	is_reset_requested = Input.is_action_just_pressed("reset_pos")
 	
 	# Set Position: one-frame request, true only on the frame the key is pressed
 	is_set_pos_requested = Input.is_action_just_pressed("set_start_pos")
