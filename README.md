@@ -4,7 +4,7 @@ A Source Engine–inspired first-person movement system built from scratch in Go
 
 ## Quick Start
 
-1. Download the latest build from the [Releases](../../releases) page *(coming soon)*, **or** clone the repo and open it in **Godot 4.7**.
+1. Download the latest build from the [Releases](../../releases) page, **or** clone the repo and open it in **Godot 4.7**.
 2. Run the main scene.
 
 Developed and tested on Godot 4.7. Older versions are untested.
