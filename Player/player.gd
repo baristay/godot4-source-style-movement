@@ -183,9 +183,9 @@ class PlayerStateSnapshot:
 		player.resp_comp.leaving_floor_motion = leaving_motion
 		
 		if movement_state:
-			player.mov_state.transition_to_state(movement_state, movement_state_info)
+			player.mov_state.transition_to_state(movement_state, movement_state_info, true)
 		
 		if crouch_state:
-			player.crouch_state.transition_to_state(crouch_state, crouch_state_info)
+			player.crouch_state.transition_to_state(crouch_state, crouch_state_info, true)
 		
 		player.reset_physics_interpolation()
